@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Friend Census 💛</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font: 'Figtree', sans-serif;
+      --card-width: 709px;
+      --card-pad-h: 24px;
+      --card-pad-b1: 48px;
+      --card-pad-b: 32px;
+      --card-gap: 32px;
+      --input-bg: #f9f9fb;
+      --input-border: 1px solid #f2f2ff;
+      --input-h: 48px;
+      --input-pad: 12px;
+      --input-radius: 8px;
+      --input-w: 320px;
+      --placeholder: #6b7285;
+      --chip-radius: 16px;
+      --textarea-h: 80px;
+      --btn-bg: #9ba3f7;
+      --btn-w: 360px;
+      --step-active: #6b78ff;
+      --step-inactive: #dddada;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 24px 80px;
+    }
+
+    /* ── Page header ── */
+    .page-header { text-align: center; margin-bottom: 24px; }
+
+    .page-title {
+      font-size: 32px; font-weight: 600;
+      color: #000; line-height: 1.25;
+    }
+
+    .page-subtitle {
+      font-size: 18px; font-weight: 500;
+      color: #000; margin-top: 8px;
+    }
+
+    /* ── Step indicator: dots + count ── */
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .step-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--step-inactive);
+      transition: background 0.2s ease;
+      flex-shrink: 0;
+    }
+    .step-dot.active { background: var(--step-active); }
+
+    /* "1 / 5" counter — matches design's numeric step indicator */
+    .step-count {
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--step-active);
+      margin-left: 6px;
+      min-width: 32px;
+    }
+
+    /* ── Card ── */
+    .card {
+      width: var(--card-width);
+      max-width: 100%;
+      background: #fff;
+      border: 1px solid #d7daff;
+      border-radius: 12px;
+      box-shadow: 0px 4px 20px 1px rgba(107,120,255,0.05);
+      overflow: hidden;
+    }
+
+    /* ── Step sections ── */
+    .step-section { display: none; }
+    .step-section.active { display: block; }
+
+    /* ── Card top: pin + badge + title on same row ── */
+    .card-top {
+      position: relative;
+      padding: 52px var(--card-pad-h) 0; /* 44px pin height + 8px gap = 52px */
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /*
+      Pin: FIX 1
+      - Centered horizontally in the card
+      - Exact inner size 23 × 44 px (no stretch)
+      - Rotated 25.84 deg
+      - Sits at very top edge of card-top (card has overflow:hidden so it clips naturally)
+    */
+    .step-pin {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%) rotate(25.84deg);
+      transform-origin: 50% 0%;
+      width: 23px;
+      height: 44px;
+      object-fit: contain;
+      pointer-events: none;
+    }
+
+    /* ── Badge ── */
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: 4px 8px; border-radius: 6px;
+      font-size: 12px; font-weight: 400;
+      width: fit-content; line-height: 1.4;
+    }
+    .badge-green  { background: #4bf1b1; color: #1c1f2b; }
+    .badge-purple { background: #e0beff; color: #1c1f2b; }
+    .badge-black  { background: #000;    color: #fff; }
+
+    /* ── Section title ── */
+    .section-title {
+      font-size: 24px; font-weight: 500;
+      color: #000; line-height: 1.2;
+    }
+
+    /* ── Card body ── */
+    .card-body {
+      padding: 24px var(--card-pad-h) var(--card-pad-b);
+      display: flex; flex-direction: column;
+      gap: var(--card-gap);
+    }
+    .card-body.pb-step1 { padding-bottom: var(--card-pad-b1); }
+
+    /* ── Fields section ── */
+    .fields-section { display: flex; flex-direction: column; gap: 16px; }
+
+    /* ── Field group ── */
+    .field-group { display: flex; flex-direction: column; gap: 8px; }
+
+    .field-label {
+      font-size: 14px; font-weight: 500;
+      color: #1c1f2b; line-height: 1.4;
+    }
+
+    /* ── Two-column row ── */
+    .field-row { display: flex; gap: 16px; flex-wrap: wrap; }
+    .field-row .field-group { flex: 1; min-width: 200px; }
+
+    /* ── Shared input style ── */
+    input[type="text"],
+    input[type="email"] {
+      font-family: var(--font); font-size: 14px; font-weight: 400;
+      color: #1c1f2b;
+      background: var(--input-bg);
+      border: var(--input-border);
+      border-radius: var(--input-radius);
+      height: var(--input-h);
+      padding: 0 var(--input-pad);
+      width: var(--input-w); max-width: 100%;
+      outline: none; transition: border-color 0.15s;
+      -webkit-appearance: none;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    textarea:focus,
+    .country-input:focus { border-color: #9ba3f7; }
+
+    input::placeholder { color: var(--placeholder); font-family: var(--font); font-weight: 400; }
+    input.w-full { width: 100%; }
+
+    /* ── Textarea ── */
+    textarea {
+      font-family: var(--font); font-size: 14px; font-weight: 400;
+      color: #1c1f2b;
+      background: var(--input-bg);
+      border: var(--input-border);
+      border-radius: var(--input-radius);
+      height: var(--textarea-h); padding: var(--input-pad);
+      width: 100%; outline: none; resize: none;
+      transition: border-color 0.15s; -webkit-appearance: none;
+    }
+    textarea::placeholder { color: var(--placeholder); font-family: var(--font); font-weight: 400; }
+
+    /* ── Chips ── */
+    .chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .chip {
+      font-family: var(--font); font-size: 14px; font-weight: 400;
+      color: #1c1f2b;
+      background: var(--input-bg); border: var(--input-border);
+      border-radius: var(--chip-radius);
+      height: var(--input-h); padding: 0 var(--input-pad);
+      display: inline-flex; align-items: center;
+      cursor: pointer; user-select: none;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .chip.selected { background: #9ba3f7; border-color: #9ba3f7; color: #fff; }
+
+    /* ── Button row: back + continue side by side ── */
+    .btn-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Continue / Submit button */
+    .btn {
+      font-family: var(--font); font-size: 16px; font-weight: 400;
+      color: #fff; background: var(--btn-bg); border: none;
+      border-radius: var(--input-radius);
+      width: var(--btn-w); max-width: 100%;
+      padding: 12px 8px; display: block; margin: 0 auto;
+      cursor: pointer; text-align: center;
+      transition: background 0.15s; -webkit-appearance: none;
+    }
+    .btn:hover  { background: #8a92e8; }
+    .btn:active { background: #6b78ff; }
+
+    /* Back button — ghost style */
+    .btn-back {
+      font-family: var(--font); font-size: 16px; font-weight: 400;
+      color: #9ba3f7; background: transparent;
+      border: 1.5px solid #d7daff;
+      border-radius: var(--input-radius);
+      width: 120px; flex-shrink: 0;
+      padding: 12px 8px; display: block;
+      cursor: pointer; text-align: center;
+      transition: border-color 0.15s, color 0.15s; -webkit-appearance: none;
+    }
+    .btn-back:hover  { border-color: #9ba3f7; color: #6b78ff; }
+    .btn-back:active { border-color: #6b78ff; color: #6b78ff; }
+
+    /* When back button is present, shrink the continue button to balance */
+    .btn-row .btn {
+      width: auto;
+      flex: 1;
+      max-width: calc(var(--btn-w) - 132px); /* 120px back + 12px gap */
+      margin: 0;
+    }
+
+
+    /* ════════════════════════════════════
+       CUSTOM CALENDAR PICKER — FIX 4
+    ════════════════════════════════════ */
+    .date-picker-wrap {
+      position: relative;
+      width: var(--input-w);
+      max-width: 100%;
+    }
+
+    /* The visible text input — readonly, opens calendar on click */
+    .date-input {
+      font-family: var(--font); font-size: 14px; font-weight: 400;
+      color: #1c1f2b;
+      background: var(--input-bg); border: var(--input-border);
+      border-radius: var(--input-radius);
+      height: var(--input-h); padding: 0 40px 0 var(--input-pad);
+      width: 100%; outline: none;
+      cursor: pointer; transition: border-color 0.15s;
+      -webkit-appearance: none;
+    }
+    .date-input::placeholder { color: var(--placeholder); }
+    .date-input:focus { border-color: #9ba3f7; }
+
+    /* Calendar icon inside input */
+    .date-input-icon {
+      position: absolute;
+      right: 12px; top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--placeholder);
+      font-size: 16px;
+    }
+
+    /* Calendar popup */
+    .cal-popup {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px); left: 0;
+      z-index: 300;
+      background: #fff;
+      border: 1px solid #d7daff;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(107,120,255,0.14);
+      padding: 16px;
+      width: 280px;
+    }
+    .cal-popup.open { display: block; }
+
+    .cal-header {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .cal-nav-btn {
+      background: none; border: none; cursor: pointer;
+      font-size: 18px; color: var(--step-active);
+      padding: 4px 8px; border-radius: 6px;
+      line-height: 1; transition: background 0.1s;
+    }
+    .cal-nav-btn:hover { background: #f2f2ff; }
+
+    .cal-month-label {
+      font-family: var(--font); font-size: 14px; font-weight: 500;
+      color: #1c1f2b;
+    }
+
+    .cal-year-row {
+      display: flex; align-items: center;
+      justify-content: center; gap: 6px;
+      margin-bottom: 12px;
+    }
+    .cal-year-btn {
+      background: #f2f2ff; border: none; cursor: pointer;
+      font-family: var(--font); font-size: 12px;
+      color: var(--step-active); border-radius: 4px;
+      padding: 2px 8px; transition: background 0.1s;
+    }
+    .cal-year-btn:hover { background: #e0e3ff; }
+    .cal-year-label {
+      font-family: var(--font); font-size: 14px; font-weight: 500;
+      color: #1c1f2b; min-width: 40px; text-align: center;
+    }
+
+    .cal-weekdays {
+      display: grid; grid-template-columns: repeat(7, 1fr);
+      text-align: center; margin-bottom: 4px;
+    }
+    .cal-weekday {
+      font-family: var(--font); font-size: 11px;
+      font-weight: 500; color: var(--placeholder);
+      padding: 4px 0;
+    }
+
+    .cal-days {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px;
+    }
+    .cal-day {
+      text-align: center; padding: 7px 2px;
+      font-family: var(--font); font-size: 13px;
+      border-radius: 6px; cursor: pointer; color: #1c1f2b;
+      transition: background 0.1s;
+    }
+    .cal-day:hover:not(.empty) { background: #f2f2ff; }
+    .cal-day.empty { cursor: default; }
+    .cal-day.today { color: var(--step-active); font-weight: 600; }
+    .cal-day.selected { background: #9ba3f7 !important; color: #fff; font-weight: 500; }
+    .cal-day.other-month { color: #c5c8d6; }
+
+
+    /* ════════════════════════════════════
+       COUNTRY DROPDOWN — FIX 5
+    ════════════════════════════════════ */
+    .country-wrap {
+      position: relative;
+      width: var(--input-w);
+      max-width: 100%;
+    }
+
+    .field-row .country-wrap { width: 100%; }
+
+    .country-input {
+      font-family: var(--font); font-size: 14px; font-weight: 400;
+      color: #1c1f2b;
+      background: var(--input-bg); border: var(--input-border);
+      border-radius: var(--input-radius);
+      height: var(--input-h); padding: 0 36px 0 var(--input-pad);
+      width: 100%; outline: none;
+      transition: border-color 0.15s; -webkit-appearance: none;
+      cursor: pointer;
+    }
+    .country-input::placeholder { color: var(--placeholder); }
+    .country-input.open { border-color: #9ba3f7; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+
+    .country-caret {
+      position: absolute; right: 12px; top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none; color: var(--placeholder);
+      font-size: 11px; transition: transform 0.2s;
+    }
+    .country-input.open + .country-caret { transform: translateY(-50%) rotate(180deg); }
+
+    .country-dropdown {
+      display: none;
+      position: absolute; top: 100%; left: 0; right: 0;
+      z-index: 300;
+      background: #fff;
+      border: 1px solid #9ba3f7;
+      border-top: none;
+      border-radius: 0 0 var(--input-radius) var(--input-radius);
+      max-height: 220px; overflow-y: auto;
+      box-shadow: 0 8px 24px rgba(107,120,255,0.1);
+    }
+    .country-dropdown.open { display: block; }
+
+    .country-dropdown::-webkit-scrollbar { width: 4px; }
+    .country-dropdown::-webkit-scrollbar-track { background: transparent; }
+    .country-dropdown::-webkit-scrollbar-thumb { background: #d7daff; border-radius: 4px; }
+
+    .country-option {
+      font-family: var(--font); font-size: 14px; color: #1c1f2b;
+      padding: 9px var(--input-pad);
+      cursor: pointer; transition: background 0.1s;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .country-option:hover { background: #f2f2ff; }
+    .country-option.selected { background: #eef0ff; color: var(--step-active); font-weight: 500; }
+    .country-option.hidden { display: none; }
+    .country-flag { font-size: 18px; line-height: 1; flex-shrink: 0; }
+    .country-no-results {
+      font-family: var(--font); font-size: 13px; color: var(--placeholder);
+      padding: 12px var(--input-pad); text-align: center;
+    }
+
+
+    /* ── Mobile ── */
+    @media (max-width: 600px) {
+      body { padding: 32px 16px 64px; }
+      .field-row { flex-direction: column; gap: 16px; }
+      .field-row .field-group { min-width: unset; }
+      input[type="text"], input[type="email"], .date-input, .country-input { width: 100%; }
+      .date-picker-wrap, .country-wrap { width: 100%; }
+      .cal-popup { width: 260px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <h1 class="page-title">Friend Census 💛</h1>
+    <p class="page-subtitle">Help me know you better.</p>
+  </header>
+
+  <!-- FIX 3: step dots + "1 / 5" count -->
+  <div class="step-indicator">
+    <div class="step-dot active" id="dot-1"></div>
+    <div class="step-dot"        id="dot-2"></div>
+    <div class="step-dot"        id="dot-3"></div>
+    <div class="step-dot"        id="dot-4"></div>
+    <div class="step-dot"        id="dot-5"></div>
+    <span class="step-count" id="step-count">1 / 5</span>
+  </div>
+
+  <div class="card">
+    <form id="census-form" action="https://api.web3forms.com/submit" method="POST">
+
+      <!-- Web3Forms config -->
+      <input type="hidden" name="access_key" value="f7c10e66-46fc-4d2b-81b5-93829a064874">
+      <input type="hidden" name="redirect"   value="https://verdant-taiyaki-5413cc.netlify.app/?submitted=true">
+      <input type="hidden" name="subject"    value="New Friend Census Response 💛">
+      <input type="hidden" name="from_name"  value="Friend Census">
+
+      <!-- Chip value collectors -->
+      <input type="hidden" name="love_languages"    id="love-languages-val">
+      <input type="hidden" name="personality_types" id="personality-types-val">
+      <input type="hidden" name="time_of_day"       id="time-of-day-val">
+      <input type="hidden" name="hobbies"           id="hobbies-val">
+
+      <!-- Country hidden inputs -->
+      <input type="hidden" name="from"  id="from-val">
+      <input type="hidden" name="lives" id="lives-val">
+
+
+      <!-- ═══════════════════════
+           STEP 1 — About You
+      ═══════════════════════ -->
+      <div class="step-section active" id="step-1">
+
+        <div class="card-top">
+          <!-- FIX 1: centered, 23×44, no stretch -->
+          <img class="step-pin"
+               src="https://www.figma.com/api/mcp/asset/8a4f9f93-f9a8-4c8f-a627-a40d6f09ea4a"
+               alt="">
+          <span class="badge badge-green">The basics</span>
+          <h2 class="section-title">About you</h2>
+        </div>
+
+        <div class="card-body pb-step1">
+          <div class="fields-section">
+
+            <div class="field-row">
+              <div class="field-group">
+                <label class="field-label" for="name">Name *</label>
+                <input type="text" id="name" name="name"
+                       placeholder="Your name" required>
+              </div>
+              <!-- FIX 4: Custom calendar picker for birthday -->
+              <div class="field-group">
+                <label class="field-label">Birthday *</label>
+                <div class="date-picker-wrap" id="birthday-wrap">
+                  <input class="date-input" id="birthday-display"
+                         name="birthday" placeholder="DD / MM / YYYY"
+                         readonly required
+                         onclick="toggleCal(event)">
+                  <span class="date-input-icon">📅</span>
+                  <div class="cal-popup" id="cal-popup">
+                    <div class="cal-header">
+                      <button type="button" class="cal-nav-btn" onclick="calPrevMonth(event)">‹</button>
+                      <span class="cal-month-label" id="cal-month-label"></span>
+                      <button type="button" class="cal-nav-btn" onclick="calNextMonth(event)">›</button>
+                    </div>
+                    <div class="cal-year-row">
+                      <button type="button" class="cal-year-btn" onclick="calChangeYear(-1, event)">−</button>
+                      <span class="cal-year-label" id="cal-year-label"></span>
+                      <button type="button" class="cal-year-btn" onclick="calChangeYear(1, event)">+</button>
+                    </div>
+                    <div class="cal-weekdays">
+                      <div class="cal-weekday">Su</div>
+                      <div class="cal-weekday">Mo</div>
+                      <div class="cal-weekday">Tu</div>
+                      <div class="cal-weekday">We</div>
+                      <div class="cal-weekday">Th</div>
+                      <div class="cal-weekday">Fr</div>
+                      <div class="cal-weekday">Sa</div>
+                    </div>
+                    <div class="cal-days" id="cal-days"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- FIX 5: Country dropdowns for "from" and "lives" -->
+            <div class="field-row">
+              <div class="field-group">
+                <label class="field-label">Where are you from?</label>
+                <div class="country-wrap" id="from-wrap">
+                  <input class="country-input" id="from-search"
+                         placeholder="Search country…" autocomplete="off"
+                         onfocus="openCountryDrop('from')"
+                         oninput="filterCountries('from')">
+                  <span class="country-caret">▼</span>
+                  <div class="country-dropdown" id="from-dropdown"></div>
+                </div>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Where do you live now?</label>
+                <div class="country-wrap" id="lives-wrap">
+                  <input class="country-input" id="lives-search"
+                         placeholder="Search country…" autocomplete="off"
+                         onfocus="openCountryDrop('lives')"
+                         oninput="filterCountries('lives')">
+                  <span class="country-caret">▼</span>
+                  <div class="country-dropdown" id="lives-dropdown"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div class="field-group">
+                <label class="field-label" for="job_title">Job title</label>
+                <input type="text" id="job_title" name="job_title"
+                       placeholder="What do you do?">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="company">Company</label>
+                <input type="text" id="company" name="company"
+                       placeholder="Where do you work?">
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Love language(s)</label>
+              <div class="chip-group" data-target="love-languages-val">
+                <div class="chip" data-value="Words of Affirmation">Words of Affirmation</div>
+                <div class="chip" data-value="Acts of Service">Acts of Service</div>
+                <div class="chip" data-value="Receiving Gifts">Receiving Gifts</div>
+                <div class="chip" data-value="Quality Time">Quality Time</div>
+                <div class="chip" data-value="Physical Touch">Physical Touch</div>
+              </div>
+            </div>
+
+          </div>
+
+          <button type="button" class="btn" onclick="goToStep(2)">Continue →</button>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════
+           STEP 2 — Your Favourites
+      ═══════════════════════════════ -->
+      <div class="step-section" id="step-2">
+
+        <div class="card-top">
+          <img class="step-pin"
+               src="https://www.figma.com/api/mcp/asset/699ba807-235f-4e28-8462-d4696086e1c0"
+               alt="">
+          <span class="badge badge-purple">The good stuff</span>
+          <h2 class="section-title">Your Favourites</h2>
+        </div>
+
+        <div class="card-body">
+          <div class="fields-section">
+            <div class="field-row">
+              <div class="field-group">
+                <label class="field-label" for="fav_food">Favourite food</label>
+                <input type="text" id="fav_food" name="fav_food" placeholder="What do you love to eat?">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="fav_music">Favourite artist / music</label>
+                <input type="text" id="fav_music" name="fav_music" placeholder="Who are you listening to?">
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-group">
+                <label class="field-label" for="fav_movie">Favourite movie / TV show</label>
+                <input type="text" id="fav_movie" name="fav_movie" placeholder="What are you watching?">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="fav_book">Favourite book</label>
+                <input type="text" id="fav_book" name="fav_book" placeholder="What have you read lately?">
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-group">
+                <label class="field-label" for="fav_colour">Favourite colour</label>
+                <input type="text" id="fav_colour" name="fav_colour" placeholder="What's your colour?">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="fav_drink">Favourite drink</label>
+                <input type="text" id="fav_drink" name="fav_drink" placeholder="Tea? Coffee? Both?">
+              </div>
+            </div>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn-back" onclick="goToStep(1)">← Back</button>
+            <button type="button" class="btn"      onclick="goToStep(3)">Continue →</button>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════
+           STEP 3 — Your Vibes
+      ═══════════════════════════ -->
+      <div class="step-section" id="step-3">
+
+        <div class="card-top">
+          <img class="step-pin"
+               src="https://www.figma.com/api/mcp/asset/98461934-105c-4c10-937d-849294cf866e"
+               alt="">
+          <span class="badge badge-purple">Who are you?</span>
+          <h2 class="section-title">Your Vibes</h2>
+        </div>
+
+        <div class="card-body">
+          <div class="fields-section">
+            <div class="field-group">
+              <label class="field-label">Personality type</label>
+              <div class="chip-group" data-target="personality-types-val">
+                <div class="chip" data-value="Introvert">Introvert</div>
+                <div class="chip" data-value="Extrovert">Extrovert</div>
+                <div class="chip" data-value="Ambivert">Ambivert</div>
+                <div class="chip" data-value="INFJ">INFJ</div>
+                <div class="chip" data-value="ENFP">ENFP</div>
+                <div class="chip" data-value="INTJ">INTJ</div>
+                <div class="chip" data-value="ENFJ">ENFJ</div>
+                <div class="chip" data-value="INFP">INFP</div>
+                <div class="chip" data-value="Other">Other</div>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">You're a...</label>
+              <div class="chip-group" data-target="time-of-day-val">
+                <div class="chip" data-value="Morning person">Morning person</div>
+                <div class="chip" data-value="Night owl">Night owl</div>
+                <div class="chip" data-value="Depends on the day">Depends on the day</div>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Hobbies &amp; interests</label>
+              <div class="chip-group" data-target="hobbies-val">
+                <div class="chip" data-value="Reading">Reading</div>
+                <div class="chip" data-value="Gaming">Gaming</div>
+                <div class="chip" data-value="Cooking">Cooking</div>
+                <div class="chip" data-value="Fitness">Fitness</div>
+                <div class="chip" data-value="Travel">Travel</div>
+                <div class="chip" data-value="Art">Art</div>
+                <div class="chip" data-value="Music">Music</div>
+                <div class="chip" data-value="Film">Film</div>
+                <div class="chip" data-value="Fashion">Fashion</div>
+                <div class="chip" data-value="Tech">Tech</div>
+                <div class="chip" data-value="Nature">Nature</div>
+                <div class="chip" data-value="Socialising">Socialising</div>
+                <div class="chip" data-value="Photography">Photography</div>
+                <div class="chip" data-value="Podcasts">Podcasts</div>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="personality_desc">Describe yourself in your own words</label>
+              <textarea id="personality_desc" name="personality_desc"
+                        placeholder="What would your friends say about you?"></textarea>
+            </div>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn-back" onclick="goToStep(2)">← Back</button>
+            <button type="button" class="btn"      onclick="goToStep(4)">Continue →</button>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════
+           STEP 4 — Gift Info
+      ═══════════════════════ -->
+      <div class="step-section" id="step-4">
+
+        <div class="card-top">
+          <img class="step-pin"
+               src="https://www.figma.com/api/mcp/asset/3dc8e274-98c6-4e33-910d-77080d1c34c1"
+               alt="">
+          <span class="badge badge-black">Gift info</span>
+          <h2 class="section-title">Gift Info</h2>
+        </div>
+
+        <div class="card-body">
+          <div class="fields-section">
+            <div class="field-row">
+              <div class="field-group">
+                <label class="field-label" for="clothing_size">Clothing size</label>
+                <input type="text" id="clothing_size" name="clothing_size"
+                       placeholder="e.g. S, M, L, 10, 12…">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="shoe_size">Shoe size</label>
+                <input type="text" id="shoe_size" name="shoe_size"
+                       placeholder="e.g. UK 7, EU 40…">
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="brands">Favourite brands</label>
+              <textarea id="brands" name="brands"
+                        placeholder="Any brands or shops you love?"></textarea>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="wishlist">Wishlist</label>
+              <textarea id="wishlist" name="wishlist"
+                        placeholder="What's on your wishlist? Drop links if you have them!"></textarea>
+            </div>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn-back" onclick="goToStep(3)">← Back</button>
+            <button type="button" class="btn"      onclick="goToStep(5)">Continue →</button>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════
+           STEP 5 — Us 💛
+      ═══════════════════ -->
+      <div class="step-section" id="step-5">
+
+        <div class="card-top">
+          <img class="step-pin"
+               src="https://www.figma.com/api/mcp/asset/9234fdae-2ef1-4dd7-8c61-1ba5671006e9"
+               alt="">
+          <span class="badge badge-purple">Just us 💛</span>
+          <h2 class="section-title">Us 💛</h2>
+        </div>
+
+        <div class="card-body">
+          <div class="fields-section">
+            <div class="field-group">
+              <label class="field-label" for="fav_memory">A favourite memory of ours</label>
+              <textarea id="fav_memory" name="fav_memory"
+                        placeholder="Tell me about a moment you remember…"></textarea>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="inside_joke">An inside joke we have</label>
+              <textarea id="inside_joke" name="inside_joke"
+                        placeholder="Go on, remind me…"></textarea>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="catchphrase">Your catchphrase / something you always say</label>
+              <input type="text" id="catchphrase" name="catchphrase"
+                     class="w-full" placeholder="What do you always say?">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="extra_notes">Anything else you want me to know?</label>
+              <textarea id="extra_notes" name="extra_notes"
+                        placeholder="Extra thoughts, feelings, demands…"></textarea>
+            </div>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn-back" onclick="goToStep(4)">← Back</button>
+            <button type="submit" class="btn">Submit 💛</button>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+
+  <script>
+  /* ═══════════════════════════════════════════════════
+     1. STEP NAVIGATION + STEP COUNT
+  ═══════════════════════════════════════════════════ */
+  var currentStep = 1;
+
+  function goToStep(n) {
+    if (currentStep === 1 && n > 1) {
+      var nameVal = document.getElementById('name').value.trim();
+      var bdayVal = document.getElementById('birthday-display').value.trim();
+      if (!nameVal || !bdayVal) {
+        alert('Please fill in your name and birthday before continuing.');
+        return;
+      }
+    }
+
+    document.getElementById('step-' + currentStep).classList.remove('active');
+    document.getElementById('dot-'  + currentStep).classList.remove('active');
+    currentStep = n;
+    document.getElementById('step-' + currentStep).classList.add('active');
+    document.getElementById('dot-'  + currentStep).classList.add('active');
+
+    // FIX 3: update count text
+    document.getElementById('step-count').textContent = currentStep + ' / 5';
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+
+  /* ═══════════════════════════════════════════════════
+     2. CHIP SELECTION
+  ═══════════════════════════════════════════════════ */
+  document.querySelectorAll('.chip-group').forEach(function(group) {
+    group.addEventListener('click', function(e) {
+      var chip = e.target.closest('.chip');
+      if (!chip) return;
+      chip.classList.toggle('selected');
+      var selected = Array.from(group.querySelectorAll('.chip.selected'))
+                          .map(function(c) { return c.dataset.value; });
+      var targetId = group.dataset.target;
+      if (targetId) document.getElementById(targetId).value = selected.join(', ');
+    });
+  });
+
+
+  /* ═══════════════════════════════════════════════════
+     3. CALENDAR PICKER  (FIX 4)
+     - Opens a styled mini-calendar below the birthday input
+     - Month/year navigation with < > buttons
+     - Year ± buttons for fast decade jumping
+     - Selecting a day fills the input as "DD / MM / YYYY"
+     - Closes on outside click
+  ═══════════════════════════════════════════════════ */
+  var MONTH_NAMES = [
+    'January','February','March','April','May','June',
+    'July','August','September','October','November','December'
+  ];
+
+  var cal = {
+    year: new Date().getFullYear() - 20,   // default start: ~20 years back
+    month: new Date().getMonth(),
+    selDay: null, selMonth: null, selYear: null
+  };
+
+  function toggleCal(e) {
+    e.stopPropagation();
+    var popup = document.getElementById('cal-popup');
+    if (popup.classList.contains('open')) {
+      popup.classList.remove('open');
+    } else {
+      renderCal();
+      popup.classList.add('open');
+    }
+  }
+
+  function calPrevMonth(e) {
+    e.stopPropagation();
+    cal.month--;
+    if (cal.month < 0) { cal.month = 11; cal.year--; }
+    renderCal();
+  }
+
+  function calNextMonth(e) {
+    e.stopPropagation();
+    cal.month++;
+    if (cal.month > 11) { cal.month = 0; cal.year++; }
+    renderCal();
+  }
+
+  function calChangeYear(delta, e) {
+    e.stopPropagation();
+    cal.year += delta;
+    renderCal();
+  }
+
+  function renderCal() {
+    var y = cal.year, m = cal.month;
+    document.getElementById('cal-month-label').textContent = MONTH_NAMES[m];
+    document.getElementById('cal-year-label').textContent  = y;
+
+    var firstDay    = new Date(y, m, 1).getDay();   // 0 = Sunday
+    var daysInMonth = new Date(y, m + 1, 0).getDate();
+    var today       = new Date();
+    var html = '';
+
+    // Empty leading cells
+    for (var i = 0; i < firstDay; i++) {
+      html += '<div class="cal-day empty"></div>';
+    }
+
+    for (var d = 1; d <= daysInMonth; d++) {
+      var cls = 'cal-day';
+      if (d === today.getDate() && m === today.getMonth() && y === today.getFullYear()) cls += ' today';
+      if (cal.selDay === d && cal.selMonth === m && cal.selYear === y) cls += ' selected';
+      html += '<div class="' + cls + '" data-d="' + d + '">' + d + '</div>';
+    }
+
+    document.getElementById('cal-days').innerHTML = html;
+
+    // Attach day click listeners
+    document.querySelectorAll('#cal-days .cal-day:not(.empty)').forEach(function(el) {
+      el.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var d = parseInt(el.dataset.d);
+        cal.selDay = d; cal.selMonth = cal.month; cal.selYear = cal.year;
+
+        var dd = String(d).padStart(2, '0');
+        var mm = String(cal.month + 1).padStart(2, '0');
+        document.getElementById('birthday-display').value = dd + ' / ' + mm + ' / ' + cal.year;
+
+        document.getElementById('cal-popup').classList.remove('open');
+        renderCal(); // refresh to show selection highlight
+      });
+    });
+  }
+
+  // Close calendar on outside click
+  document.addEventListener('click', function(e) {
+    var wrap = document.getElementById('birthday-wrap');
+    if (wrap && !wrap.contains(e.target)) {
+      document.getElementById('cal-popup').classList.remove('open');
+    }
+  });
+
+
+  /* ═══════════════════════════════════════════════════
+     4. COUNTRY DROPDOWN  (FIX 5)
+     - Two instances: "from" and "lives"
+     - Searchable list of ~195 countries
+     - Typing filters in real time
+     - Selecting a country populates the hidden input
+       and closes the dropdown
+     - Closes on outside click
+  ═══════════════════════════════════════════════════ */
+  // Each entry: [flagEmoji, countryName]
+  var COUNTRIES = [
+    ['🇦🇫','Afghanistan'],['🇦🇱','Albania'],['🇩🇿','Algeria'],['🇦🇩','Andorra'],
+    ['🇦🇴','Angola'],['🇦🇬','Antigua and Barbuda'],['🇦🇷','Argentina'],['🇦🇲','Armenia'],
+    ['🇦🇺','Australia'],['🇦🇹','Austria'],['🇦🇿','Azerbaijan'],['🇧🇸','Bahamas'],
+    ['🇧🇭','Bahrain'],['🇧🇩','Bangladesh'],['🇧🇧','Barbados'],['🇧🇾','Belarus'],
+    ['🇧🇪','Belgium'],['🇧🇿','Belize'],['🇧🇯','Benin'],['🇧🇹','Bhutan'],
+    ['🇧🇴','Bolivia'],['🇧🇦','Bosnia and Herzegovina'],['🇧🇼','Botswana'],['🇧🇷','Brazil'],
+    ['🇧🇳','Brunei'],['🇧🇬','Bulgaria'],['🇧🇫','Burkina Faso'],['🇧🇮','Burundi'],
+    ['🇨🇻','Cabo Verde'],['🇰🇭','Cambodia'],['🇨🇲','Cameroon'],['🇨🇦','Canada'],
+    ['🇨🇫','Central African Republic'],['🇹🇩','Chad'],['🇨🇱','Chile'],['🇨🇳','China'],
+    ['🇨🇴','Colombia'],['🇰🇲','Comoros'],['🇨🇩','Congo (Democratic Republic)'],
+    ['🇨🇬','Congo (Republic)'],['🇨🇷','Costa Rica'],['🇭🇷','Croatia'],['🇨🇺','Cuba'],
+    ['🇨🇾','Cyprus'],['🇨🇿','Czech Republic'],['🇩🇰','Denmark'],['🇩🇯','Djibouti'],
+    ['🇩🇲','Dominica'],['🇩🇴','Dominican Republic'],['🇪🇨','Ecuador'],['🇪🇬','Egypt'],
+    ['🇸🇻','El Salvador'],['🇬🇶','Equatorial Guinea'],['🇪🇷','Eritrea'],['🇪🇪','Estonia'],
+    ['🇸🇿','Eswatini'],['🇪🇹','Ethiopia'],['🇫🇯','Fiji'],['🇫🇮','Finland'],
+    ['🇫🇷','France'],['🇬🇦','Gabon'],['🇬🇲','Gambia'],['🇬🇪','Georgia'],
+    ['🇩🇪','Germany'],['🇬🇭','Ghana'],['🇬🇷','Greece'],['🇬🇩','Grenada'],
+    ['🇬🇹','Guatemala'],['🇬🇳','Guinea'],['🇬🇼','Guinea-Bissau'],['🇬🇾','Guyana'],
+    ['🇭🇹','Haiti'],['🇭🇳','Honduras'],['🇭🇺','Hungary'],['🇮🇸','Iceland'],
+    ['🇮🇳','India'],['🇮🇩','Indonesia'],['🇮🇷','Iran'],['🇮🇶','Iraq'],
+    ['🇮🇪','Ireland'],['🇮🇱','Israel'],['🇮🇹','Italy'],['🇯🇲','Jamaica'],
+    ['🇯🇵','Japan'],['🇯🇴','Jordan'],['🇰🇿','Kazakhstan'],['🇰🇪','Kenya'],
+    ['🇰🇮','Kiribati'],['🇽🇰','Kosovo'],['🇰🇼','Kuwait'],['🇰🇬','Kyrgyzstan'],
+    ['🇱🇦','Laos'],['🇱🇻','Latvia'],['🇱🇧','Lebanon'],['🇱🇸','Lesotho'],
+    ['🇱🇷','Liberia'],['🇱🇾','Libya'],['🇱🇮','Liechtenstein'],['🇱🇹','Lithuania'],
+    ['🇱🇺','Luxembourg'],['🇲🇬','Madagascar'],['🇲🇼','Malawi'],['🇲🇾','Malaysia'],
+    ['🇲🇻','Maldives'],['🇲🇱','Mali'],['🇲🇹','Malta'],['🇲🇭','Marshall Islands'],
+    ['🇲🇷','Mauritania'],['🇲🇺','Mauritius'],['🇲🇽','Mexico'],['🇫🇲','Micronesia'],
+    ['🇲🇩','Moldova'],['🇲🇨','Monaco'],['🇲🇳','Mongolia'],['🇲🇪','Montenegro'],
+    ['🇲🇦','Morocco'],['🇲🇿','Mozambique'],['🇲🇲','Myanmar'],['🇳🇦','Namibia'],
+    ['🇳🇷','Nauru'],['🇳🇵','Nepal'],['🇳🇱','Netherlands'],['🇳🇿','New Zealand'],
+    ['🇳🇮','Nicaragua'],['🇳🇪','Niger'],['🇳🇬','Nigeria'],['🇰🇵','North Korea'],
+    ['🇲🇰','North Macedonia'],['🇳🇴','Norway'],['🇴🇲','Oman'],['🇵🇰','Pakistan'],
+    ['🇵🇼','Palau'],['🇵🇸','Palestine'],['🇵🇦','Panama'],['🇵🇬','Papua New Guinea'],
+    ['🇵🇾','Paraguay'],['🇵🇪','Peru'],['🇵🇭','Philippines'],['🇵🇱','Poland'],
+    ['🇵🇹','Portugal'],['🇶🇦','Qatar'],['🇷🇴','Romania'],['🇷🇺','Russia'],
+    ['🇷🇼','Rwanda'],['🇰🇳','Saint Kitts and Nevis'],['🇱🇨','Saint Lucia'],
+    ['🇻🇨','Saint Vincent and the Grenadines'],['🇼🇸','Samoa'],['🇸🇲','San Marino'],
+    ['🇸🇹','São Tomé and Príncipe'],['🇸🇦','Saudi Arabia'],['🇸🇳','Senegal'],
+    ['🇷🇸','Serbia'],['🇸🇨','Seychelles'],['🇸🇱','Sierra Leone'],['🇸🇬','Singapore'],
+    ['🇸🇰','Slovakia'],['🇸🇮','Slovenia'],['🇸🇧','Solomon Islands'],['🇸🇴','Somalia'],
+    ['🇿🇦','South Africa'],['🇰🇷','South Korea'],['🇸🇸','South Sudan'],['🇪🇸','Spain'],
+    ['🇱🇰','Sri Lanka'],['🇸🇩','Sudan'],['🇸🇷','Suriname'],['🇸🇪','Sweden'],
+    ['🇨🇭','Switzerland'],['🇸🇾','Syria'],['🇹🇼','Taiwan'],['🇹🇯','Tajikistan'],
+    ['🇹🇿','Tanzania'],['🇹🇭','Thailand'],['🇹🇱','Timor-Leste'],['🇹🇬','Togo'],
+    ['🇹🇴','Tonga'],['🇹🇹','Trinidad and Tobago'],['🇹🇳','Tunisia'],['🇹🇷','Turkey'],
+    ['🇹🇲','Turkmenistan'],['🇹🇻','Tuvalu'],['🇺🇬','Uganda'],['🇺🇦','Ukraine'],
+    ['🇦🇪','United Arab Emirates'],['🇬🇧','United Kingdom'],['🇺🇸','United States'],
+    ['🇺🇾','Uruguay'],['🇺🇿','Uzbekistan'],['🇻🇺','Vanuatu'],['🇻🇦','Vatican City'],
+    ['🇻🇪','Venezuela'],['🇻🇳','Vietnam'],['🇾🇪','Yemen'],['🇿🇲','Zambia'],['🇿🇼','Zimbabwe']
+  ];
+
+  // Build dropdown HTML once — each entry is [flag, name]
+  function buildDropdown(prefix) {
+    var dropdown = document.getElementById(prefix + '-dropdown');
+    dropdown.innerHTML = '';
+    COUNTRIES.forEach(function(entry) {
+      var flag = entry[0], name = entry[1];
+      var div = document.createElement('div');
+      div.className = 'country-option';
+      div.dataset.name = name.toLowerCase(); // for fast filtering
+      div.innerHTML =
+        '<span class="country-flag">' + flag + '</span>' +
+        '<span class="country-name">'  + name + '</span>';
+      div.addEventListener('click', function(e) {
+        e.stopPropagation();
+        selectCountry(prefix, flag, name);
+      });
+      dropdown.appendChild(div);
+    });
+  }
+
+  function openCountryDrop(prefix) {
+    // Close the other one
+    var other = prefix === 'from' ? 'lives' : 'from';
+    closeCountryDrop(other);
+
+    document.getElementById(prefix + '-search').classList.add('open');
+    var dropdown = document.getElementById(prefix + '-dropdown');
+    dropdown.classList.add('open');
+    filterCountries(prefix);
+  }
+
+  function closeCountryDrop(prefix) {
+    document.getElementById(prefix + '-search').classList.remove('open');
+    document.getElementById(prefix + '-dropdown').classList.remove('open');
+  }
+
+  function filterCountries(prefix) {
+    var query = document.getElementById(prefix + '-search').value.toLowerCase().trim();
+    var options = document.querySelectorAll('#' + prefix + '-dropdown .country-option');
+    var anyVisible = false;
+
+    options.forEach(function(opt) {
+      // Filter by country name only (data-name), not the flag emoji
+      if (opt.dataset.name.includes(query)) {
+        opt.classList.remove('hidden');
+        anyVisible = true;
+      } else {
+        opt.classList.add('hidden');
+      }
+    });
+
+    // Show/hide no-results
+    var noRes = document.getElementById(prefix + '-no-results');
+    if (noRes) noRes.style.display = anyVisible ? 'none' : 'block';
+  }
+
+  function selectCountry(prefix, flag, name) {
+    // Show "🇬🇧 United Kingdom" in the visible search input
+    document.getElementById(prefix + '-search').value = flag + '  ' + name;
+    document.getElementById(prefix + '-search').classList.remove('open');
+    // Store just the name in the hidden field for clean form submission
+    document.getElementById(prefix + '-val').value = name;
+    document.getElementById(prefix + '-dropdown').classList.remove('open');
+
+    // Mark selected visually in the list
+    var options = document.querySelectorAll('#' + prefix + '-dropdown .country-option');
+    options.forEach(function(opt) {
+      opt.classList.toggle('selected', opt.dataset.name === name.toLowerCase());
+    });
+  }
+
+  // Close dropdowns on outside click
+  document.addEventListener('click', function(e) {
+    ['from','lives'].forEach(function(prefix) {
+      var wrap = document.getElementById(prefix + '-wrap');
+      if (wrap && !wrap.contains(e.target)) {
+        closeCountryDrop(prefix);
+      }
+    });
+  });
+
+  // Init
+  buildDropdown('from');
+  buildDropdown('lives');
+  </script>
+
+</body>
+</html>
