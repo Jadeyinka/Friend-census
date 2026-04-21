@@ -436,6 +436,140 @@
     }
 
 
+    /* ════════════════════════════════════
+       INTRO SCREEN
+    ════════════════════════════════════ */
+    #intro-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 20px;
+      max-width: 480px;
+      width: 100%;
+      animation: fadeIn 0.4s ease;
+    }
+
+    #form-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      animation: fadeIn 0.35s ease;
+    }
+    #form-screen.visible { display: flex; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Photo circle */
+    .intro-photo-wrap {
+      position: relative;
+      width: 96px;
+      height: 96px;
+    }
+
+    .intro-photo {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #e0beff;
+      box-shadow: 0 4px 20px rgba(107,120,255,0.15);
+    }
+
+    /* Fallback shown when photo file isn't found yet */
+    .intro-photo-fallback {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e0beff 0%, #9ba3f7 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      font-weight: 600;
+      color: #fff;
+      border: 3px solid #e0beff;
+      box-shadow: 0 4px 20px rgba(107,120,255,0.15);
+    }
+
+    /* Small waving emoji badge on the photo */
+    .intro-wave {
+      position: absolute;
+      bottom: 0; right: -4px;
+      width: 30px; height: 30px;
+      background: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      box-shadow: 0 2px 8px rgba(107,120,255,0.2);
+    }
+
+    .intro-greeting {
+      font-family: var(--font);
+      font-size: 28px;
+      font-weight: 600;
+      color: #000;
+      line-height: 1.2;
+    }
+
+    .intro-message {
+      font-family: var(--font);
+      font-size: 16px;
+      font-weight: 400;
+      color: #4a4e69;
+      line-height: 1.65;
+      max-width: 380px;
+    }
+
+    .intro-message strong {
+      color: #1c1f2b;
+      font-weight: 500;
+    }
+
+    .intro-meta {
+      font-family: var(--font);
+      font-size: 13px;
+      color: var(--placeholder);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .intro-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .intro-btn {
+      font-family: var(--font);
+      font-size: 16px;
+      font-weight: 500;
+      color: #fff;
+      background: var(--btn-bg);
+      border: none;
+      border-radius: var(--input-radius);
+      width: 280px;
+      padding: 14px 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+      -webkit-appearance: none;
+      margin-top: 4px;
+    }
+    .intro-btn:hover  { background: #8a92e8; }
+    .intro-btn:active { background: #6b78ff; }
+
+    .intro-footer {
+      font-family: var(--font);
+      font-size: 12px;
+      color: var(--placeholder);
+      margin-top: -8px;
+    }
+
     /* ── Mobile ── */
     @media (max-width: 600px) {
       body { padding: 32px 16px 64px; }
@@ -449,20 +583,58 @@
 </head>
 <body>
 
-  <header class="page-header">
-    <h1 class="page-title">Friend Census 💛</h1>
-    <p class="page-subtitle">Help me know you better.</p>
-  </header>
+  <!-- ═══════════════════════════════════
+       INTRO SCREEN
+  ═══════════════════════════════════ -->
+  <div id="intro-screen">
 
-  <!-- FIX 3: step dots + "1 / 5" count -->
-  <div class="step-indicator">
-    <div class="step-dot active" id="dot-1"></div>
-    <div class="step-dot"        id="dot-2"></div>
-    <div class="step-dot"        id="dot-3"></div>
-    <div class="step-dot"        id="dot-4"></div>
-    <div class="step-dot"        id="dot-5"></div>
-    <span class="step-count" id="step-count">1 / 5</span>
+    <!-- Photo: rename your photo to yinks.jpg and put it in this folder -->
+    <div class="intro-photo-wrap">
+      <img class="intro-photo" id="intro-photo-img"
+           src="yinks.jpg" alt="Yinks"
+           onerror="this.style.display='none'; document.getElementById('intro-photo-fallback').style.display='flex';">
+      <div class="intro-photo-fallback" id="intro-photo-fallback" style="display:none;">Y</div>
+      <div class="intro-wave">👋</div>
+    </div>
+
+    <h1 class="intro-greeting">Hey, it's Yinks!</h1>
+
+    <p class="intro-message">
+      I made this little form because I genuinely want to know you —
+      <strong>the real stuff</strong>, not just your highlight reel.<br><br>
+      It takes about 3 minutes. Be honest, I can take it 💛
+    </p>
+
+    <div class="intro-meta">
+      <span class="intro-meta-item">⏱ ~3 minutes</span>
+      <span class="intro-meta-item">🔒 Only Yinks sees this</span>
+      <span class="intro-meta-item">✨ 5 steps</span>
+    </div>
+
+    <button class="intro-btn" onclick="startCensus()">Let's go →</button>
+    <p class="intro-footer">No wrong answers. Promise.</p>
+
   </div>
+
+
+  <!-- ═══════════════════════════════════
+       FORM SCREEN (hidden until intro done)
+  ═══════════════════════════════════ -->
+  <div id="form-screen">
+
+    <header class="page-header">
+      <h1 class="page-title">Friend Census 💛</h1>
+      <p class="page-subtitle">Help me know you better.</p>
+    </header>
+
+    <div class="step-indicator">
+      <div class="step-dot active" id="dot-1"></div>
+      <div class="step-dot"        id="dot-2"></div>
+      <div class="step-dot"        id="dot-3"></div>
+      <div class="step-dot"        id="dot-4"></div>
+      <div class="step-dot"        id="dot-5"></div>
+      <span class="step-count" id="step-count">1 / 5</span>
+    </div>
 
   <div class="card">
     <form id="census-form" action="https://api.web3forms.com/submit" method="POST">
@@ -815,8 +987,30 @@
     </form>
   </div>
 
+  </div> <!-- end #form-screen -->
+
 
   <script>
+  /* ═══════════════════════════════════════════════════
+     0. INTRO → FORM TRANSITION
+  ═══════════════════════════════════════════════════ */
+  function startCensus() {
+    var intro = document.getElementById('intro-screen');
+    var form  = document.getElementById('form-screen');
+
+    // Fade the intro out
+    intro.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+    intro.style.opacity = '0';
+    intro.style.transform = 'translateY(-8px)';
+
+    setTimeout(function() {
+      intro.style.display = 'none';
+      form.classList.add('visible');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 300);
+  }
+
+
   /* ═══════════════════════════════════════════════════
      1. STEP NAVIGATION + STEP COUNT
   ═══════════════════════════════════════════════════ */
