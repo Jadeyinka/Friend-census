@@ -444,8 +444,8 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: 20px;
-      max-width: 480px;
+      gap: 16px;
+      max-width: var(--card-width);
       width: 100%;
       animation: fadeIn 0.4s ease;
     }
@@ -464,48 +464,64 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* Photo circle */
-    .intro-photo-wrap {
+    /* Hero image — large rectangle */
+    .intro-hero {
+      width: 100%;
+      height: 360px;
+      border-radius: 12px;
+      border: 1px solid #d7daff;
+      box-shadow: 0px 4px 20px 1px rgba(107,120,255,0.08);
+      overflow: hidden;
       position: relative;
-      width: 96px;
-      height: 96px;
     }
 
-    .intro-photo {
-      width: 96px;
-      height: 96px;
-      border-radius: 50%;
+    .intro-hero img {
+      width: 100%;
+      height: 100%;
       object-fit: cover;
-      border: 3px solid #e0beff;
-      box-shadow: 0 4px 20px rgba(107,120,255,0.15);
+      object-position: center calc(50% + 24px);
+      display: block;
     }
 
-    /* Fallback shown when photo file isn't found yet */
-    .intro-photo-fallback {
-      width: 96px;
-      height: 96px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #e0beff 0%, #9ba3f7 100%);
+    /* Fallback gradient shown when yinks.jpg isn't in the folder yet */
+    .intro-hero-fallback {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(145deg, #e0beff 0%, #9ba3f7 50%, #4bf1b1 100%);
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-size: 36px;
-      font-weight: 600;
-      color: #fff;
-      border: 3px solid #e0beff;
-      box-shadow: 0 4px 20px rgba(107,120,255,0.15);
+      gap: 12px;
     }
 
-    /* Small waving emoji badge on the photo */
-    .intro-wave {
+    .intro-hero-fallback-initial {
+      font-family: var(--font);
+      font-size: 80px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+      line-height: 1;
+    }
+
+    .intro-hero-fallback-label {
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.75);
+      background: rgba(255,255,255,0.2);
+      padding: 4px 12px;
+      border-radius: 20px;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Subtle gradient at the bottom of the image so text reads cleanly */
+    .intro-hero::after {
+      content: '';
       position: absolute;
-      bottom: 0; right: -4px;
-      width: 30px; height: 30px;
-      background: #fff;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
-      box-shadow: 0 2px 8px rgba(107,120,255,0.2);
+      bottom: 0; left: 0; right: 0;
+      height: 80px;
+      background: linear-gradient(to top, rgba(255,255,255,0.25), transparent);
+      pointer-events: none;
     }
 
     .intro-greeting {
@@ -522,7 +538,7 @@
       font-weight: 400;
       color: #4a4e69;
       line-height: 1.65;
-      max-width: 380px;
+      max-width: 480px;
     }
 
     .intro-message strong {
@@ -570,6 +586,177 @@
       margin-top: -8px;
     }
 
+
+    /* ════════════════════════════════════
+       REVIEW SCREEN
+    ════════════════════════════════════ */
+    #review-screen {
+      display: none;
+      width: var(--card-width);
+      max-width: 100%;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .review-card {
+      background: #fff;
+      border: 1px solid #d7daff;
+      border-radius: 12px;
+      box-shadow: 0px 4px 20px 1px rgba(107,120,255,0.05);
+      overflow: hidden;
+    }
+
+    .review-card-header {
+      padding: 28px 24px 20px;
+      border-bottom: 1px solid #f2f2ff;
+    }
+
+    .review-eyebrow {
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--step-active);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .review-heading {
+      font-family: var(--font);
+      font-size: 22px;
+      font-weight: 600;
+      color: #000;
+      line-height: 1.2;
+    }
+
+    .review-subtext {
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--placeholder);
+      margin-top: 4px;
+    }
+
+    .review-body {
+      padding: 0 24px 28px;
+    }
+
+    /* Each step group */
+    .review-section {
+      padding: 20px 0;
+      border-bottom: 1px solid #f2f2ff;
+    }
+    .review-section:last-child { border-bottom: none; }
+
+    .review-section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .review-section-title {
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 600;
+      color: #1c1f2b;
+    }
+
+    /* Each field row */
+    .review-field {
+      display: flex;
+      gap: 12px;
+      padding: 5px 0;
+      align-items: flex-start;
+    }
+
+    .review-label {
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--placeholder);
+      min-width: 130px;
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+
+    .review-value {
+      font-family: var(--font);
+      font-size: 14px;
+      color: #1c1f2b;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .review-actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      padding: 24px;
+      border-top: 1px solid #f2f2ff;
+    }
+
+
+    /* ════════════════════════════════════
+       THANK YOU SCREEN
+    ════════════════════════════════════ */
+    #thankyou-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 20px;
+      width: var(--card-width);
+      max-width: 100%;
+      padding: 24px;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .thankyou-emoji {
+      font-size: 64px;
+      line-height: 1;
+      animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+    }
+
+    @keyframes pop {
+      0%   { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1);   opacity: 1; }
+    }
+
+    .thankyou-heading {
+      font-family: var(--font);
+      font-size: 30px;
+      font-weight: 600;
+      color: #000;
+      line-height: 1.2;
+    }
+
+    .thankyou-message {
+      font-family: var(--font);
+      font-size: 16px;
+      color: #4a4e69;
+      line-height: 1.7;
+      max-width: 400px;
+    }
+
+    .thankyou-card {
+      background: #f9f9fb;
+      border: 1px solid #f2f2ff;
+      border-radius: 12px;
+      padding: 20px 28px;
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--placeholder);
+      line-height: 1.6;
+      max-width: 420px;
+      width: 100%;
+    }
+
+    .thankyou-card strong {
+      color: #1c1f2b;
+      font-weight: 500;
+    }
+
     /* ── Mobile ── */
     @media (max-width: 600px) {
       body { padding: 32px 16px 64px; }
@@ -588,13 +775,14 @@
   ═══════════════════════════════════ -->
   <div id="intro-screen">
 
-    <!-- Photo: rename your photo to yinks.jpg and put it in this folder -->
-    <div class="intro-photo-wrap">
-      <img class="intro-photo" id="intro-photo-img"
-           src="yinks.jpg" alt="Yinks"
-           onerror="this.style.display='none'; document.getElementById('intro-photo-fallback').style.display='flex';">
-      <div class="intro-photo-fallback" id="intro-photo-fallback" style="display:none;">Y</div>
-      <div class="intro-wave">👋</div>
+    <!-- Hero image: rename your photo to yinks.jpg and drop it in this folder -->
+    <div class="intro-hero">
+      <img src="yinks.jpg" alt="Yinks"
+           onerror="this.style.display='none'; document.getElementById('intro-hero-fallback').style.display='flex';">
+      <div class="intro-hero-fallback" id="intro-hero-fallback" style="display:none;">
+        <span class="intro-hero-fallback-initial">Y</span>
+        <span class="intro-hero-fallback-label">Add yinks.jpg to see your photo</span>
+      </div>
     </div>
 
     <h1 class="intro-greeting">Hey, it's Yinks!</h1>
@@ -979,13 +1167,44 @@
           </div>
           <div class="btn-row">
             <button type="button" class="btn-back" onclick="goToStep(4)">← Back</button>
-            <button type="submit" class="btn">Submit 💛</button>
+            <button type="button" class="btn" onclick="goToReview()">Review answers →</button>
           </div>
         </div>
       </div>
 
     </form>
-  </div>
+  </div> <!-- end .card -->
+
+    <!-- ═══════════════════════════════════════
+         REVIEW SCREEN
+    ═══════════════════════════════════════ -->
+    <div id="review-screen">
+      <div class="review-card">
+        <div class="review-card-header">
+          <p class="review-eyebrow">Almost there</p>
+          <h2 class="review-heading">Here's what you're sending Yinks 💛</h2>
+          <p class="review-subtext">Take a look — you can go back and edit anything.</p>
+        </div>
+        <div class="review-body" id="review-content"></div>
+        <div class="review-actions">
+          <button type="button" class="btn-back" onclick="backFromReview()">← Edit</button>
+          <button type="button" class="btn" id="review-submit-btn" onclick="submitCensus()">Send to Yinks 💛</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+         THANK YOU SCREEN
+    ═══════════════════════════════════════ -->
+    <div id="thankyou-screen">
+      <div class="thankyou-emoji">💛</div>
+      <h2 class="thankyou-heading">You're the best, <span id="thankyou-name"></span>!</h2>
+      <p class="thankyou-message">I've got your answers and I'm going to read every single word. Thank you for filling this out — it genuinely means a lot 💛</p>
+      <div class="thankyou-card">
+        <strong>What happens next?</strong><br>
+        Yinks will read your answers and probably cry a little. In a good way.
+      </div>
+    </div>
 
   </div> <!-- end #form-screen -->
 
@@ -1302,6 +1521,152 @@
   // Init
   buildDropdown('from');
   buildDropdown('lives');
+
+
+  /* ═══════════════════════════════════════════════════
+     5. REVIEW STEP
+     - goToReview()      : reads all form values and renders a summary
+     - backFromReview()  : hides review, shows form back at step 5
+     - submitCensus()    : sends data to Web3Forms via fetch
+     - showThankYou()    : shows the custom thank you screen
+  ═══════════════════════════════════════════════════ */
+
+  // Helper: grab a field's value cleanly (empty → dash)
+  function getVal(id) {
+    var el = document.getElementById(id);
+    if (!el) return '—';
+    var v = el.value.trim();
+    return v || '—';
+  }
+
+  // Build one labelled row for the review card
+  function reviewRow(label, value) {
+    if (!value || value === '—') return '';
+    return (
+      '<div class="review-field">' +
+        '<span class="review-label">' + label + '</span>' +
+        '<span class="review-value">' + value + '</span>' +
+      '</div>'
+    );
+  }
+
+  // Build one section block (heading + rows)
+  function reviewSection(title, rows) {
+    var inner = rows.join('');
+    if (!inner) return '';
+    return (
+      '<div class="review-section">' +
+        '<p class="review-section-title">' + title + '</p>' +
+        inner +
+      '</div>'
+    );
+  }
+
+  function goToReview() {
+    // ── Gather all values ──────────────────────────────
+    var html = '';
+
+    html += reviewSection('About you', [
+      reviewRow('Name',         getVal('name')),
+      reviewRow('Birthday',     getVal('birthday-display')),
+      reviewRow('From',         getVal('from-val')),
+      reviewRow('Lives in',     getVal('lives-val')),
+      reviewRow('Occupation',   getVal('occupation')),
+    ]);
+
+    html += reviewSection('The good stuff ✨', [
+      reviewRow('Fav colour',   getVal('fav_colour')),
+      reviewRow('Fav cuisine',  getVal('fav_cuisine')),
+      reviewRow('Fav film/TV',  getVal('fav_film')),
+      reviewRow('Fav book',     getVal('fav_book')),
+      reviewRow('Fav music',    getVal('fav_music')),
+      reviewRow('Fav place',    getVal('fav_place')),
+    ]);
+
+    html += reviewSection('Who you are 🌀', [
+      reviewRow('Love language',getVal('love-languages-val')),
+      reviewRow('Personality',  getVal('personality-types-val')),
+      reviewRow('Time of day',  getVal('time-of-day-val')),
+      reviewRow('Hobbies',      getVal('hobbies-val')),
+      reviewRow('In your words',getVal('personality_desc')),
+    ]);
+
+    html += reviewSection('Gift info 🎁', [
+      reviewRow('Clothing size',getVal('clothing_size')),
+      reviewRow('Shoe size',    getVal('shoe_size')),
+      reviewRow('Fav brands',   getVal('brands')),
+      reviewRow('Wishlist',     getVal('wishlist')),
+    ]);
+
+    html += reviewSection('Just us 💛', [
+      reviewRow('Favourite memory', getVal('fav_memory')),
+      reviewRow('Inside joke',      getVal('inside_joke')),
+      reviewRow('Catchphrase',      getVal('catchphrase')),
+      reviewRow('Anything else',    getVal('extra_notes')),
+    ]);
+
+    document.getElementById('review-content').innerHTML = html || '<p style="color:#888;font-size:14px">Nothing filled in yet!</p>';
+
+    // ── Hide the step card UI, show review ─────────────
+    document.querySelector('.page-header').style.display   = 'none';
+    document.querySelector('.step-indicator').style.display = 'none';
+    document.querySelector('.card').style.display          = 'none';
+    document.getElementById('review-screen').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function backFromReview() {
+    document.getElementById('review-screen').style.display  = 'none';
+    document.querySelector('.page-header').style.display    = '';
+    document.querySelector('.step-indicator').style.display = '';
+    document.querySelector('.card').style.display           = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function submitCensus() {
+    var btn = document.getElementById('review-submit-btn');
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
+
+    // Collect all named form fields
+    var form = document.querySelector('form');
+    var data = new FormData(form);
+    // Web3Forms access key
+    data.set('access_key', 'f7c10e66-46fc-4d2b-81b5-93829a064874');
+    data.set('subject', 'Friend Census: ' + getVal('name'));
+
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      body: data
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(json) {
+      if (json.success) {
+        showThankYou();
+      } else {
+        btn.textContent = 'Send to Yinks 💛';
+        btn.disabled = false;
+        alert('Hmm, something went wrong. Please try again!');
+      }
+    })
+    .catch(function() {
+      btn.textContent = 'Send to Yinks 💛';
+      btn.disabled = false;
+      alert('No internet? Check your connection and try again.');
+    });
+  }
+
+  function showThankYou() {
+    // Grab the first name only (everything before the first space)
+    var fullName = getVal('name');
+    var firstName = fullName.split(' ')[0] || fullName;
+    document.getElementById('thankyou-name').textContent = firstName;
+
+    // Swap screens
+    document.getElementById('review-screen').style.display   = 'none';
+    document.getElementById('thankyou-screen').style.display = 'flex';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
   </script>
 
 </body>
