@@ -178,7 +178,7 @@
       padding: 0 var(--input-pad);
       width: var(--input-w); max-width: 100%;
       outline: none; transition: border-color 0.15s;
-      -webkit-appearance: none;
+      -webkit-appearance: none; appearance: none;
     }
 
     input[type="text"]:focus,
@@ -198,7 +198,7 @@
       border-radius: var(--input-radius);
       height: var(--textarea-h); padding: var(--input-pad);
       width: 100%; outline: none; resize: none;
-      transition: border-color 0.15s; -webkit-appearance: none;
+      transition: border-color 0.15s; -webkit-appearance: none; appearance: none;
     }
     textarea::placeholder { color: var(--placeholder); font-family: var(--font); font-weight: 400; }
 
@@ -234,7 +234,7 @@
       width: var(--btn-w); max-width: 100%;
       padding: 12px 8px; display: block; margin: 0 auto;
       cursor: pointer; text-align: center;
-      transition: background 0.15s; -webkit-appearance: none;
+      transition: background 0.15s; -webkit-appearance: none; appearance: none;
     }
     .btn:hover  { background: #8a92e8; }
     .btn:active { background: #6b78ff; }
@@ -248,7 +248,7 @@
       width: 120px; flex-shrink: 0;
       padding: 12px 8px; display: block;
       cursor: pointer; text-align: center;
-      transition: border-color 0.15s, color 0.15s; -webkit-appearance: none;
+      transition: border-color 0.15s, color 0.15s; -webkit-appearance: none; appearance: none;
     }
     .btn-back:hover  { border-color: #9ba3f7; color: #6b78ff; }
     .btn-back:active { border-color: #6b78ff; color: #6b78ff; }
@@ -280,7 +280,7 @@
       height: var(--input-h); padding: 0 40px 0 var(--input-pad);
       width: 100%; outline: none;
       cursor: pointer; transition: border-color 0.15s;
-      -webkit-appearance: none;
+      -webkit-appearance: none; appearance: none;
     }
     .date-input::placeholder { color: var(--placeholder); }
     .date-input:focus { border-color: #9ba3f7; }
@@ -389,7 +389,7 @@
       border-radius: var(--input-radius);
       height: var(--input-h); padding: 0 36px 0 var(--input-pad);
       width: 100%; outline: none;
-      transition: border-color 0.15s; -webkit-appearance: none;
+      transition: border-color 0.15s; -webkit-appearance: none; appearance: none;
       cursor: pointer;
     }
     .country-input::placeholder { color: var(--placeholder); }
