@@ -251,17 +251,17 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 24px;
+      gap: 16px;
     }
 
     /* Continue / Submit button */
     .btn {
       font-family: var(--font); font-size: 16px; font-weight: 400;
-      color: #fff; background: var(--btn-bg); border: none;
+      color: #fff; background: var(--btn-bg); border: 1.5px solid transparent;
       border-radius: var(--input-radius);
       width: var(--btn-w); max-width: 100%;
-      padding: 12px 8px; display: block; margin: 0 auto;
-      cursor: pointer; text-align: center;
+      height: 48px; padding: 0 8px; display: block; margin: 0 auto;
+      cursor: pointer; text-align: center; box-sizing: border-box;
       transition: background 0.15s; -webkit-appearance: none; appearance: none;
     }
     .btn:hover  { background: var(--accent-hover); }
@@ -274,8 +274,8 @@
       border: 1.5px solid var(--card-border);
       border-radius: var(--input-radius);
       width: 120px; flex-shrink: 0;
-      padding: 12px 8px; display: block;
-      cursor: pointer; text-align: center;
+      height: 48px; padding: 0 8px; display: block;
+      cursor: pointer; text-align: center; box-sizing: border-box;
       transition: border-color 0.15s, color 0.15s; -webkit-appearance: none; appearance: none;
     }
     .btn-back:hover  { border-color: var(--accent); color: var(--accent-hover); }
@@ -842,7 +842,6 @@
       .btn-back {
         width: 96px;
         font-size: 15px;
-        padding: 13px 8px;
         flex-shrink: 0;
       }
       .btn-row { gap: 16px; }
