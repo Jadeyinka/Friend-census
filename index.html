@@ -997,6 +997,7 @@
                   <input class="country-input" id="from-search"
                          placeholder="Search country…" autocomplete="off"
                          onfocus="openCountryDrop('from')"
+                         onclick="openCountryDrop('from')"
                          oninput="filterCountries('from')">
                   <span class="country-caret"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 4.5L6 8L9.5 4.5" stroke="#A8673E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                   <div class="country-dropdown" id="from-dropdown"></div>
@@ -1008,6 +1009,7 @@
                   <input class="country-input" id="lives-search"
                          placeholder="Search country…" autocomplete="off"
                          onfocus="openCountryDrop('lives')"
+                         onclick="openCountryDrop('lives')"
                          oninput="filterCountries('lives')">
                   <span class="country-caret"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 4.5L6 8L9.5 4.5" stroke="#A8673E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                   <div class="country-dropdown" id="lives-dropdown"></div>
@@ -1522,14 +1524,24 @@
     var other = prefix === 'from' ? 'lives' : 'from';
     closeCountryDrop(other);
 
-    document.getElementById(prefix + '-search').classList.add('open');
+    var input = document.getElementById(prefix + '-search');
+    // Save the current display value so we can restore it if user clicks away
+    input.dataset.savedDisplay = input.value;
+    // Clear the field so the full list appears and user can type to search
+    input.value = '';
+    input.classList.add('open');
     var dropdown = document.getElementById(prefix + '-dropdown');
     dropdown.classList.add('open');
-    filterCountries(prefix);
+    filterCountries(prefix); // empty query → shows all countries
   }
 
   function closeCountryDrop(prefix) {
-    document.getElementById(prefix + '-search').classList.remove('open');
+    var input = document.getElementById(prefix + '-search');
+    // Restore the previously selected display value if field is now empty
+    if (!input.value && input.dataset.savedDisplay) {
+      input.value = input.dataset.savedDisplay;
+    }
+    input.classList.remove('open');
     document.getElementById(prefix + '-dropdown').classList.remove('open');
   }
 
@@ -1554,9 +1566,12 @@
   }
 
   function selectCountry(prefix, flag, name) {
+    var input = document.getElementById(prefix + '-search');
     // Show "🇬🇧 United Kingdom" in the visible search input
-    document.getElementById(prefix + '-search').value = flag + '  ' + name;
-    document.getElementById(prefix + '-search').classList.remove('open');
+    input.value = flag + '  ' + name;
+    // Update saved display so clicking away after re-open shows the new selection
+    input.dataset.savedDisplay = flag + '  ' + name;
+    input.classList.remove('open');
     // Store just the name in the hidden field for clean form submission
     document.getElementById(prefix + '-val').value = name;
     document.getElementById(prefix + '-dropdown').classList.remove('open');
