@@ -15,26 +15,38 @@
       --card-pad-b1: 48px;
       --card-pad-b: 32px;
       --card-gap: 32px;
-      --input-bg: #f9f9fb;
-      --input-border: 1px solid #f2f2ff;
-      --input-h: 48px;
-      --input-pad: 12px;
-      --input-radius: 8px;
-      --input-w: 320px;
-      --placeholder: #6b7285;
-      --chip-radius: 16px;
-      --textarea-h: 80px;
-      --btn-bg: #9ba3f7;
-      --btn-w: 360px;
-      --step-active: #6b78ff;
-      --step-inactive: #dddada;
+
+      /* ── Warm Neutral palette ── */
+      --bg:            #F5F1EC;
+      --card-bg:       #FFFFFF;
+      --card-border:   #E8DDD2;
+      --accent:        #A8673E;
+      --accent-hover:  #8F5432;
+      --accent-active: #7A4428;
+      --input-bg:      #FDFAF7;
+      --input-border:  1px solid #E8DDD2;
+      --input-focus:   #C07A4F;
+      --input-h:       48px;
+      --input-pad:     12px;
+      --input-radius:  8px;
+      --input-w:       320px;
+      --placeholder:   #8B7D6B;
+      --text-main:     #1F1A14;
+      --text-soft:     #7A6E63;
+      --chip-radius:   16px;
+      --textarea-h:    80px;
+      --btn-bg:        #C07A4F;
+      --btn-w:         360px;
+      --step-active:   #C07A4F;
+      --step-inactive: #D6C9BB;
+      --shadow:        rgba(139,100,72,0.07);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: var(--font);
-      background: #ffffff;
+      background: var(--bg);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -47,12 +59,12 @@
 
     .page-title {
       font-size: 32px; font-weight: 600;
-      color: #000; line-height: 1.25;
+      color: var(--text-main); line-height: 1.25;
     }
 
     .page-subtitle {
       font-size: 18px; font-weight: 500;
-      color: #000; margin-top: 8px;
+      color: var(--text-soft); margin-top: 8px;
     }
 
     /* ── Step indicator: dots + count ── */
@@ -72,7 +84,7 @@
     }
     .step-dot.active { background: var(--step-active); }
 
-    /* "1 / 5" counter — matches design's numeric step indicator */
+    /* "1 / 4" counter — matches design's numeric step indicator */
     .step-count {
       font-family: var(--font);
       font-size: 14px;
@@ -86,10 +98,10 @@
     .card {
       width: var(--card-width);
       max-width: 100%;
-      background: #fff;
-      border: 1px solid #d7daff;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       border-radius: 12px;
-      box-shadow: 0px 4px 20px 1px rgba(107,120,255,0.05);
+      box-shadow: 0px 4px 20px 1px var(--shadow);
       overflow: hidden;
     }
 
@@ -122,8 +134,12 @@
       transform-origin: 50% 0%;
       width: 23px;
       height: 44px;
-      object-fit: contain;
       pointer-events: none;
+      flex-shrink: 0;
+    }
+    .step-pin svg {
+      width: 100%;
+      height: 100%;
     }
 
     /* ── Badge ── */
@@ -133,14 +149,14 @@
       font-size: 12px; font-weight: 400;
       width: fit-content; line-height: 1.4;
     }
-    .badge-green  { background: #4bf1b1; color: #1c1f2b; }
-    .badge-purple { background: #e0beff; color: #1c1f2b; }
-    .badge-black  { background: #000;    color: #fff; }
+    .badge-green  { background: #E4F0DC; color: #3A5C28; }
+    .badge-purple { background: #F5E8DE; color: #7C3D1A; }
+    .badge-black  { background: #1F1A14; color: #fff; }
 
     /* ── Section title ── */
     .section-title {
       font-size: 24px; font-weight: 500;
-      color: #000; line-height: 1.2;
+      color: var(--text-main); line-height: 1.2;
     }
 
     /* ── Card body ── */
@@ -159,7 +175,7 @@
 
     .field-label {
       font-size: 14px; font-weight: 500;
-      color: #1c1f2b; line-height: 1.4;
+      color: var(--text-main); line-height: 1.4;
     }
 
     /* ── Two-column row ── */
@@ -168,9 +184,10 @@
 
     /* ── Shared input style ── */
     input[type="text"],
-    input[type="email"] {
+    input[type="email"],
+    input[type="tel"] {
       font-family: var(--font); font-size: 14px; font-weight: 400;
-      color: #1c1f2b;
+      color: var(--text-main);
       background: var(--input-bg);
       border: var(--input-border);
       border-radius: var(--input-radius);
@@ -183,16 +200,27 @@
 
     input[type="text"]:focus,
     input[type="email"]:focus,
+    input[type="tel"]:focus,
     textarea:focus,
-    .country-input:focus { border-color: #9ba3f7; }
+    .country-input:focus { border-color: var(--input-focus); }
 
     input::placeholder { color: var(--placeholder); font-family: var(--font); font-weight: 400; }
     input.w-full { width: 100%; }
 
+    /* Override browser autofill blue background */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus {
+      -webkit-box-shadow: 0 0 0px 1000px var(--input-bg) inset;
+      box-shadow: 0 0 0px 1000px var(--input-bg) inset;
+      -webkit-text-fill-color: var(--text-main);
+      transition: background-color 9999s ease-in-out 0s;
+    }
+
     /* ── Textarea ── */
     textarea {
       font-family: var(--font); font-size: 14px; font-weight: 400;
-      color: #1c1f2b;
+      color: var(--text-main);
       background: var(--input-bg);
       border: var(--input-border);
       border-radius: var(--input-radius);
@@ -207,7 +235,7 @@
 
     .chip {
       font-family: var(--font); font-size: 14px; font-weight: 400;
-      color: #1c1f2b;
+      color: var(--text-main);
       background: var(--input-bg); border: var(--input-border);
       border-radius: var(--chip-radius);
       height: var(--input-h); padding: 0 var(--input-pad);
@@ -216,14 +244,14 @@
       transition: background 0.15s, border-color 0.15s, color 0.15s;
       white-space: nowrap;
     }
-    .chip.selected { background: #9ba3f7; border-color: #9ba3f7; color: #fff; }
+    .chip.selected { background: var(--accent); border-color: var(--accent); color: #fff; }
 
     /* ── Button row: back + continue side by side ── */
     .btn-row {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 12px;
+      gap: 24px;
     }
 
     /* Continue / Submit button */
@@ -236,28 +264,28 @@
       cursor: pointer; text-align: center;
       transition: background 0.15s; -webkit-appearance: none; appearance: none;
     }
-    .btn:hover  { background: #8a92e8; }
-    .btn:active { background: #6b78ff; }
+    .btn:hover  { background: var(--accent-hover); }
+    .btn:active { background: var(--accent-active); }
 
     /* Back button — ghost style */
     .btn-back {
       font-family: var(--font); font-size: 16px; font-weight: 400;
-      color: #9ba3f7; background: transparent;
-      border: 1.5px solid #d7daff;
+      color: var(--accent); background: transparent;
+      border: 1.5px solid var(--card-border);
       border-radius: var(--input-radius);
       width: 120px; flex-shrink: 0;
       padding: 12px 8px; display: block;
       cursor: pointer; text-align: center;
       transition: border-color 0.15s, color 0.15s; -webkit-appearance: none; appearance: none;
     }
-    .btn-back:hover  { border-color: #9ba3f7; color: #6b78ff; }
-    .btn-back:active { border-color: #6b78ff; color: #6b78ff; }
+    .btn-back:hover  { border-color: var(--accent); color: var(--accent-hover); }
+    .btn-back:active { border-color: var(--accent-active); color: var(--accent-active); }
 
     /* When back button is present, shrink the continue button to balance */
     .btn-row .btn {
       width: auto;
       flex: 1;
-      max-width: calc(var(--btn-w) - 132px); /* 120px back + 12px gap */
+      max-width: calc(var(--btn-w) - 144px); /* 120px back + 24px gap */
       margin: 0;
     }
 
@@ -283,7 +311,7 @@
       -webkit-appearance: none; appearance: none;
     }
     .date-input::placeholder { color: var(--placeholder); }
-    .date-input:focus { border-color: #9ba3f7; }
+    .date-input:focus { border-color: var(--input-focus); }
 
     /* Calendar icon inside input */
     .date-input-icon {
@@ -301,10 +329,10 @@
       position: absolute;
       top: calc(100% + 6px); left: 0;
       z-index: 300;
-      background: #fff;
-      border: 1px solid #d7daff;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(107,120,255,0.14);
+      box-shadow: 0 8px 32px rgba(139,100,72,0.12);
       padding: 16px;
       width: 280px;
     }
@@ -321,11 +349,11 @@
       padding: 4px 8px; border-radius: 6px;
       line-height: 1; transition: background 0.1s;
     }
-    .cal-nav-btn:hover { background: #f2f2ff; }
+    .cal-nav-btn:hover { background: #F5EDE5; }
 
     .cal-month-label {
       font-family: var(--font); font-size: 14px; font-weight: 500;
-      color: #1c1f2b;
+      color: var(--text-main);
     }
 
     .cal-year-row {
@@ -334,15 +362,15 @@
       margin-bottom: 12px;
     }
     .cal-year-btn {
-      background: #f2f2ff; border: none; cursor: pointer;
+      background: #F5EDE5; border: none; cursor: pointer;
       font-family: var(--font); font-size: 12px;
       color: var(--step-active); border-radius: 4px;
       padding: 2px 8px; transition: background 0.1s;
     }
-    .cal-year-btn:hover { background: #e0e3ff; }
+    .cal-year-btn:hover { background: #F5EDE5; }
     .cal-year-label {
       font-family: var(--font); font-size: 14px; font-weight: 500;
-      color: #1c1f2b; min-width: 40px; text-align: center;
+      color: var(--text-main); min-width: 40px; text-align: center;
     }
 
     .cal-weekdays {
@@ -364,10 +392,10 @@
       border-radius: 6px; cursor: pointer; color: #1c1f2b;
       transition: background 0.1s;
     }
-    .cal-day:hover:not(.empty) { background: #f2f2ff; }
+    .cal-day:hover:not(.empty) { background: #F5EDE5; }
     .cal-day.empty { cursor: default; }
-    .cal-day.today { color: var(--step-active); font-weight: 600; }
-    .cal-day.selected { background: #9ba3f7 !important; color: #fff; font-weight: 500; }
+    .cal-day.today { color: var(--accent); font-weight: 600; }
+    .cal-day.selected { background: var(--accent) !important; color: #fff; font-weight: 500; }
     .cal-day.other-month { color: #c5c8d6; }
 
 
@@ -393,13 +421,13 @@
       cursor: pointer;
     }
     .country-input::placeholder { color: var(--placeholder); }
-    .country-input.open { border-color: #9ba3f7; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+    .country-input.open { border-color: var(--accent); border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
 
     .country-caret {
       position: absolute; right: 12px; top: 50%;
       transform: translateY(-50%);
       pointer-events: none; color: var(--placeholder);
-      font-size: 11px; transition: transform 0.2s;
+      font-size: 10px; line-height: 1; transition: transform 0.2s;
     }
     .country-input.open + .country-caret { transform: translateY(-50%) rotate(180deg); }
 
@@ -407,27 +435,27 @@
       display: none;
       position: absolute; top: 100%; left: 0; right: 0;
       z-index: 300;
-      background: #fff;
-      border: 1px solid #9ba3f7;
+      background: var(--card-bg);
+      border: 1px solid var(--accent);
       border-top: none;
       border-radius: 0 0 var(--input-radius) var(--input-radius);
       max-height: 220px; overflow-y: auto;
-      box-shadow: 0 8px 24px rgba(107,120,255,0.1);
+      box-shadow: 0 8px 24px rgba(139,100,72,0.1);
     }
     .country-dropdown.open { display: block; }
 
     .country-dropdown::-webkit-scrollbar { width: 4px; }
     .country-dropdown::-webkit-scrollbar-track { background: transparent; }
-    .country-dropdown::-webkit-scrollbar-thumb { background: #d7daff; border-radius: 4px; }
+    .country-dropdown::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
 
     .country-option {
-      font-family: var(--font); font-size: 14px; color: #1c1f2b;
+      font-family: var(--font); font-size: 14px; color: var(--text-main);
       padding: 9px var(--input-pad);
       cursor: pointer; transition: background 0.1s;
       display: flex; align-items: center; gap: 10px;
     }
-    .country-option:hover { background: #f2f2ff; }
-    .country-option.selected { background: #eef0ff; color: var(--step-active); font-weight: 500; }
+    .country-option:hover { background: #F5EDE5; }
+    .country-option.selected { background: #F5E8DE; color: var(--accent); font-weight: 500; }
     .country-option.hidden { display: none; }
     .country-flag { font-size: 18px; line-height: 1; flex-shrink: 0; }
     .country-no-results {
@@ -444,7 +472,7 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: 16px;
+      gap: 12px;
       max-width: var(--card-width);
       width: 100%;
       animation: fadeIn 0.4s ease;
@@ -467,10 +495,10 @@
     /* Hero image — large rectangle */
     .intro-hero {
       width: 100%;
-      height: 360px;
+      height: 300px;
       border-radius: 12px;
-      border: 1px solid #d7daff;
-      box-shadow: 0px 4px 20px 1px rgba(107,120,255,0.08);
+      border: 1px solid var(--card-border);
+      box-shadow: 0px 4px 20px 1px var(--shadow);
       overflow: hidden;
       position: relative;
     }
@@ -487,7 +515,7 @@
     .intro-hero-fallback {
       width: 100%;
       height: 100%;
-      background: linear-gradient(145deg, #e0beff 0%, #9ba3f7 50%, #4bf1b1 100%);
+      background: linear-gradient(145deg, #E8DDD2 0%, #C07A4F 60%, #A8673E 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -528,21 +556,21 @@
       font-family: var(--font);
       font-size: 28px;
       font-weight: 600;
-      color: #000;
+      color: var(--text-main);
       line-height: 1.2;
     }
 
     .intro-message {
       font-family: var(--font);
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 400;
-      color: #4a4e69;
-      line-height: 1.65;
+      color: var(--text-soft);
+      line-height: 1.6;
       max-width: 480px;
     }
 
     .intro-message strong {
-      color: #1c1f2b;
+      color: var(--text-main);
       font-weight: 500;
     }
 
@@ -566,18 +594,18 @@
       font-size: 16px;
       font-weight: 500;
       color: #fff;
-      background: var(--btn-bg);
+      background: var(--accent);
       border: none;
       border-radius: var(--input-radius);
-      width: 280px;
+      width: var(--btn-w);
+      max-width: 100%;
       padding: 14px 8px;
       cursor: pointer;
       transition: background 0.15s;
       -webkit-appearance: none;
-      margin-top: 4px;
     }
-    .intro-btn:hover  { background: #8a92e8; }
-    .intro-btn:active { background: #6b78ff; }
+    .intro-btn:hover  { background: var(--accent-hover); }
+    .intro-btn:active { background: var(--accent-active); }
 
     .intro-footer {
       font-family: var(--font);
@@ -598,16 +626,16 @@
     }
 
     .review-card {
-      background: #fff;
-      border: 1px solid #d7daff;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       border-radius: 12px;
-      box-shadow: 0px 4px 20px 1px rgba(107,120,255,0.05);
+      box-shadow: 0px 4px 20px 1px var(--shadow);
       overflow: hidden;
     }
 
     .review-card-header {
       padding: 28px 24px 20px;
-      border-bottom: 1px solid #f2f2ff;
+      border-bottom: 1px solid var(--card-border);
     }
 
     .review-eyebrow {
@@ -624,7 +652,7 @@
       font-family: var(--font);
       font-size: 22px;
       font-weight: 600;
-      color: #000;
+      color: var(--text-main);
       line-height: 1.2;
     }
 
@@ -642,7 +670,7 @@
     /* Each step group */
     .review-section {
       padding: 20px 0;
-      border-bottom: 1px solid #f2f2ff;
+      border-bottom: 1px solid var(--card-border);
     }
     .review-section:last-child { border-bottom: none; }
 
@@ -657,7 +685,7 @@
       font-family: var(--font);
       font-size: 15px;
       font-weight: 600;
-      color: #1c1f2b;
+      color: var(--text-main);
     }
 
     /* Each field row */
@@ -681,7 +709,7 @@
     .review-value {
       font-family: var(--font);
       font-size: 14px;
-      color: #1c1f2b;
+      color: var(--text-main);
       line-height: 1.5;
       white-space: pre-wrap;
       word-break: break-word;
@@ -693,7 +721,7 @@
       align-items: center;
       gap: 12px;
       padding: 24px;
-      border-top: 1px solid #f2f2ff;
+      border-top: 1px solid var(--card-border);
     }
 
 
@@ -727,21 +755,21 @@
       font-family: var(--font);
       font-size: 30px;
       font-weight: 600;
-      color: #000;
+      color: var(--text-main);
       line-height: 1.2;
     }
 
     .thankyou-message {
       font-family: var(--font);
       font-size: 16px;
-      color: #4a4e69;
+      color: var(--text-soft);
       line-height: 1.7;
       max-width: 400px;
     }
 
     .thankyou-card {
-      background: #f9f9fb;
-      border: 1px solid #f2f2ff;
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
       border-radius: 12px;
       padding: 20px 28px;
       font-family: var(--font);
@@ -753,18 +781,83 @@
     }
 
     .thankyou-card strong {
-      color: #1c1f2b;
+      color: var(--text-main);
       font-weight: 500;
     }
 
     /* ── Mobile ── */
     @media (max-width: 600px) {
-      body { padding: 32px 16px 64px; }
-      .field-row { flex-direction: column; gap: 16px; }
+      /* ── Layout ── */
+      body { padding: 24px 16px 60px; }
+
+      /* ── Intro screen ── */
+      #intro-screen { gap: 10px; }
+      .intro-hero { height: 220px; }
+      .intro-greeting { font-size: 22px; }
+      .intro-message { font-size: 14px; line-height: 1.55; }
+      .intro-meta { gap: 10px; font-size: 12px; flex-wrap: wrap; justify-content: center; }
+      .intro-btn { width: 100%; font-size: 15px; padding: 13px 8px; }
+
+      /* ── Page header ── */
+      .page-title { font-size: 24px; }
+      .page-subtitle { font-size: 15px; }
+
+      /* ── Step indicator ── */
+      .step-indicator { gap: 6px; margin-bottom: 16px; }
+      .step-count { font-size: 13px; }
+
+      /* ── Card ── */
+      .card { border-radius: 10px; }
+      .card-top { padding-top: 44px; gap: 8px; }
+      .card-body { padding: 18px 16px 24px; gap: 20px; }
+      .card-body.pb-step1 { padding-bottom: 28px; }
+
+      /* ── Section title ── */
+      .section-title { font-size: 20px; }
+
+      /* ── Fields ── */
+      .fields-section { gap: 14px; }
+      .field-row { flex-direction: column; gap: 14px; }
       .field-row .field-group { min-width: unset; }
-      input[type="text"], input[type="email"], .date-input, .country-input { width: 100%; }
+      input[type="text"],
+      input[type="email"],
+      input[type="tel"],
+      .date-input,
+      .country-input { width: 100%; }
       .date-picker-wrap, .country-wrap { width: 100%; }
-      .cal-popup { width: 260px; }
+
+      /* ── Calendar ── */
+      .cal-popup { width: calc(100vw - 48px); max-width: 300px; }
+
+      /* ── Chips ── */
+      .chip { font-size: 13px; height: 40px; padding: 0 10px; }
+
+      /* ── Buttons ── */
+      .btn {
+        font-size: 15px;
+        padding: 13px 8px;
+        width: 100%;
+        max-width: 100%;
+      }
+      .btn-back {
+        width: 96px;
+        font-size: 15px;
+        padding: 13px 8px;
+        flex-shrink: 0;
+      }
+      .btn-row { gap: 16px; }
+      .btn-row .btn { max-width: 100%; flex: 1; }
+
+      /* ── Review screen ── */
+      .review-card-header { padding: 20px 16px 16px; }
+      .review-heading { font-size: 19px; }
+      .review-body { padding: 0 16px 20px; }
+      .review-label { min-width: 100px; font-size: 12px; }
+      .review-actions { padding: 16px; gap: 16px; }
+
+      /* ── Thank you screen ── */
+      .thankyou-heading { font-size: 24px; }
+      .thankyou-emoji { font-size: 52px; }
     }
   </style>
 </head>
@@ -785,22 +878,19 @@
       </div>
     </div>
 
-    <h1 class="intro-greeting">Hey, it's Yinks!</h1>
+    <h1 class="intro-greeting">Hi my loveeeeee 💛</h1>
 
     <p class="intro-message">
-      I made this little form because I genuinely want to know you —
-      <strong>the real stuff</strong>, not just your highlight reel.<br><br>
-      It takes about 3 minutes. Be honest, I can take it 💛
+      I made this to keep track of the things that matter — so I can show up for you properly. Life gets busy, and I don't want important things to slip through the cracks. <strong>Takes about three minutes, and only I see your answers.</strong>
     </p>
 
     <div class="intro-meta">
       <span class="intro-meta-item">⏱ ~3 minutes</span>
       <span class="intro-meta-item">🔒 Only Yinks sees this</span>
-      <span class="intro-meta-item">✨ 5 steps</span>
+      <span class="intro-meta-item">💛 4 steps</span>
     </div>
 
-    <button class="intro-btn" onclick="startCensus()">Let's go →</button>
-    <p class="intro-footer">No wrong answers. Promise.</p>
+    <button class="intro-btn" onclick="startCensus()">I feel this, let's go →</button>
 
   </div>
 
@@ -820,8 +910,7 @@
       <div class="step-dot"        id="dot-2"></div>
       <div class="step-dot"        id="dot-3"></div>
       <div class="step-dot"        id="dot-4"></div>
-      <div class="step-dot"        id="dot-5"></div>
-      <span class="step-count" id="step-count">1 / 5</span>
+      <span class="step-count" id="step-count">1 / 4</span>
     </div>
 
   <div class="card">
@@ -834,10 +923,10 @@
       <input type="hidden" name="from_name"  value="Friend Census">
 
       <!-- Chip value collectors -->
-      <input type="hidden" name="love_languages"    id="love-languages-val">
-      <input type="hidden" name="personality_types" id="personality-types-val">
-      <input type="hidden" name="time_of_day"       id="time-of-day-val">
-      <input type="hidden" name="hobbies"           id="hobbies-val">
+      <input type="hidden" name="love_languages" id="love-languages-val">
+      <input type="hidden" name="relationship"   id="relationship-val">
+      <input type="hidden" name="what_to_send"   id="what-to-send-val">
+      <input type="hidden" name="support_style"  id="support-style-val">
 
       <!-- Country hidden inputs -->
       <input type="hidden" name="from"  id="from-val">
@@ -851,9 +940,7 @@
 
         <div class="card-top">
           <!-- FIX 1: centered, 23×44, no stretch -->
-          <img class="step-pin"
-               src="https://www.figma.com/api/mcp/asset/8a4f9f93-f9a8-4c8f-a627-a40d6f09ea4a"
-               alt="">
+          <span class="step-pin"><svg viewBox="0 0 23 44" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="11.5" cy="11" rx="8.5" ry="8.5" fill="#4ADE80" stroke="#fff" stroke-width="1.5"/><ellipse cx="11.5" cy="11" rx="4" ry="4" fill="#fff" opacity="0.45"/><rect x="10.5" y="18" width="2" height="22" rx="1" fill="#4ADE80" opacity="0.6"/><ellipse cx="11.5" cy="40.5" rx="2" ry="1.5" fill="#4ADE80" opacity="0.25"/></svg></span>
           <span class="badge badge-green">The basics</span>
           <h2 class="section-title">About you</h2>
         </div>
@@ -911,7 +998,7 @@
                          placeholder="Search country…" autocomplete="off"
                          onfocus="openCountryDrop('from')"
                          oninput="filterCountries('from')">
-                  <span class="country-caret">▼</span>
+                  <span class="country-caret"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 4.5L6 8L9.5 4.5" stroke="#A8673E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                   <div class="country-dropdown" id="from-dropdown"></div>
                 </div>
               </div>
@@ -922,7 +1009,7 @@
                          placeholder="Search country…" autocomplete="off"
                          onfocus="openCountryDrop('lives')"
                          oninput="filterCountries('lives')">
-                  <span class="country-caret">▼</span>
+                  <span class="country-caret"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 4.5L6 8L9.5 4.5" stroke="#A8673E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                   <div class="country-dropdown" id="lives-dropdown"></div>
                 </div>
               </div>
@@ -930,14 +1017,14 @@
 
             <div class="field-row">
               <div class="field-group">
-                <label class="field-label" for="job_title">Job title</label>
+                <label class="field-label" for="job_title">What do you do?</label>
                 <input type="text" id="job_title" name="job_title"
-                       placeholder="What do you do?">
+                       placeholder="e.g. Product designer at Kora">
               </div>
               <div class="field-group">
-                <label class="field-label" for="company">Company</label>
-                <input type="text" id="company" name="company"
-                       placeholder="Where do you work?">
+                <label class="field-label" for="phone">Phone number</label>
+                <input type="tel" id="phone" name="phone"
+                       placeholder="e.g. +44 7911 123456">
               </div>
             </div>
 
@@ -960,50 +1047,57 @@
 
 
       <!-- ═══════════════════════════════
-           STEP 2 — Your Favourites
+           STEP 2 — Life Right Now
       ═══════════════════════════════ -->
       <div class="step-section" id="step-2">
 
         <div class="card-top">
-          <img class="step-pin"
-               src="https://www.figma.com/api/mcp/asset/699ba807-235f-4e28-8462-d4696086e1c0"
-               alt="">
-          <span class="badge badge-purple">The good stuff</span>
-          <h2 class="section-title">Your Favourites</h2>
+          <span class="step-pin"><svg viewBox="0 0 23 44" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="11.5" cy="11" rx="8.5" ry="8.5" fill="#A78BFA" stroke="#fff" stroke-width="1.5"/><ellipse cx="11.5" cy="11" rx="4" ry="4" fill="#fff" opacity="0.45"/><rect x="10.5" y="18" width="2" height="22" rx="1" fill="#A78BFA" opacity="0.6"/><ellipse cx="11.5" cy="40.5" rx="2" ry="1.5" fill="#A78BFA" opacity="0.25"/></svg></span>
+          <span class="badge badge-purple">Right now</span>
+          <h2 class="section-title">Life Right Now</h2>
         </div>
 
         <div class="card-body">
           <div class="fields-section">
-            <div class="field-row">
-              <div class="field-group">
-                <label class="field-label" for="fav_food">Favourite food</label>
-                <input type="text" id="fav_food" name="fav_food" placeholder="What do you love to eat?">
-              </div>
-              <div class="field-group">
-                <label class="field-label" for="fav_music">Favourite artist / music</label>
-                <input type="text" id="fav_music" name="fav_music" placeholder="Who are you listening to?">
-              </div>
-            </div>
-            <div class="field-row">
-              <div class="field-group">
-                <label class="field-label" for="fav_movie">Favourite movie / TV show</label>
-                <input type="text" id="fav_movie" name="fav_movie" placeholder="What are you watching?">
-              </div>
-              <div class="field-group">
-                <label class="field-label" for="fav_book">Favourite book</label>
-                <input type="text" id="fav_book" name="fav_book" placeholder="What have you read lately?">
+
+            <div class="field-group">
+              <label class="field-label">Relationship status</label>
+              <div class="chip-group chip-group--single" data-target="relationship-val" id="relationship-chips">
+                <div class="chip" data-value="Single">Single</div>
+                <div class="chip" data-value="In a relationship">In a relationship</div>
+                <div class="chip" data-value="Married">Married</div>
+                <div class="chip" data-value="Situationship">Situationship 😒</div>
               </div>
             </div>
-            <div class="field-row">
-              <div class="field-group">
-                <label class="field-label" for="fav_colour">Favourite colour</label>
-                <input type="text" id="fav_colour" name="fav_colour" placeholder="What's your colour?">
-              </div>
-              <div class="field-group">
-                <label class="field-label" for="fav_drink">Favourite drink</label>
-                <input type="text" id="fav_drink" name="fav_drink" placeholder="Tea? Coffee? Both?">
+
+            <!-- Partner fields — shown only when not Single -->
+            <div id="partner-fields" style="display:none;">
+              <div class="field-row">
+                <div class="field-group">
+                  <label class="field-label" for="partner_name">Partner's name</label>
+                  <input type="text" id="partner_name" name="partner_name"
+                         placeholder="What's their name?">
+                </div>
+                <div class="field-group">
+                  <label class="field-label" for="anniversary">Anniversary date</label>
+                  <input type="text" id="anniversary" name="anniversary"
+                         placeholder="e.g. 14 Feb 2021">
+                </div>
               </div>
             </div>
+
+            <div class="field-group">
+              <label class="field-label" for="current_chapter">What does your life look like right now?</label>
+              <textarea id="current_chapter" name="current_chapter"
+                        placeholder="New job, big move, a season of chaos — whatever it is, tell me…"></textarea>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="excited_about">Something you're really excited about</label>
+              <textarea id="excited_about" name="excited_about"
+                        placeholder="What's got you going right now?"></textarea>
+            </div>
+
           </div>
           <div class="btn-row">
             <button type="button" class="btn-back" onclick="goToStep(1)">← Back</button>
@@ -1013,67 +1107,44 @@
       </div>
 
 
-      <!-- ═══════════════════════════
-           STEP 3 — Your Vibes
-      ═══════════════════════════ -->
+      <!-- ══════════════════════════════════
+           STEP 3 — Where You Live
+      ══════════════════════════════════ -->
       <div class="step-section" id="step-3">
 
         <div class="card-top">
-          <img class="step-pin"
-               src="https://www.figma.com/api/mcp/asset/98461934-105c-4c10-937d-849294cf866e"
-               alt="">
-          <span class="badge badge-purple">Who are you?</span>
-          <h2 class="section-title">Your Vibes</h2>
+          <span class="step-pin"><svg viewBox="0 0 23 44" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="11.5" cy="11" rx="8.5" ry="8.5" fill="#1c1f2b" stroke="#fff" stroke-width="1.5"/><ellipse cx="11.5" cy="11" rx="4" ry="4" fill="#fff" opacity="0.45"/><rect x="10.5" y="18" width="2" height="22" rx="1" fill="#1c1f2b" opacity="0.6"/><ellipse cx="11.5" cy="40.5" rx="2" ry="1.5" fill="#1c1f2b" opacity="0.25"/></svg></span>
+          <span class="badge badge-black">Where you live</span>
+          <h2 class="section-title">Your Address</h2>
         </div>
 
         <div class="card-body">
           <div class="fields-section">
-            <div class="field-group">
-              <label class="field-label">Personality type</label>
-              <div class="chip-group" data-target="personality-types-val">
-                <div class="chip" data-value="Introvert">Introvert</div>
-                <div class="chip" data-value="Extrovert">Extrovert</div>
-                <div class="chip" data-value="Ambivert">Ambivert</div>
-                <div class="chip" data-value="INFJ">INFJ</div>
-                <div class="chip" data-value="ENFP">ENFP</div>
-                <div class="chip" data-value="INTJ">INTJ</div>
-                <div class="chip" data-value="ENFJ">ENFJ</div>
-                <div class="chip" data-value="INFP">INFP</div>
-                <div class="chip" data-value="Other">Other</div>
+
+            <div class="field-row">
+              <div class="field-group">
+                <label class="field-label" for="address_line1">Street address</label>
+                <input type="text" id="address_line1" name="address_line1"
+                       placeholder="Street / flat / apartment…">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="city">City</label>
+                <input type="text" id="city" name="city" placeholder="City">
               </div>
             </div>
-            <div class="field-group">
-              <label class="field-label">You're a...</label>
-              <div class="chip-group" data-target="time-of-day-val">
-                <div class="chip" data-value="Morning person">Morning person</div>
-                <div class="chip" data-value="Night owl">Night owl</div>
-                <div class="chip" data-value="Depends on the day">Depends on the day</div>
+
+            <div class="field-row">
+              <div class="field-group">
+                <label class="field-label" for="postcode">Postcode / ZIP</label>
+                <input type="text" id="postcode" name="postcode" placeholder="e.g. SW1A 1AA">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="send_notes">Delivery notes</label>
+                <input type="text" id="send_notes" name="send_notes"
+                       placeholder="Ring the bell, leave with neighbour…">
               </div>
             </div>
-            <div class="field-group">
-              <label class="field-label">Hobbies &amp; interests</label>
-              <div class="chip-group" data-target="hobbies-val">
-                <div class="chip" data-value="Reading">Reading</div>
-                <div class="chip" data-value="Gaming">Gaming</div>
-                <div class="chip" data-value="Cooking">Cooking</div>
-                <div class="chip" data-value="Fitness">Fitness</div>
-                <div class="chip" data-value="Travel">Travel</div>
-                <div class="chip" data-value="Art">Art</div>
-                <div class="chip" data-value="Music">Music</div>
-                <div class="chip" data-value="Film">Film</div>
-                <div class="chip" data-value="Fashion">Fashion</div>
-                <div class="chip" data-value="Tech">Tech</div>
-                <div class="chip" data-value="Nature">Nature</div>
-                <div class="chip" data-value="Socialising">Socialising</div>
-                <div class="chip" data-value="Photography">Photography</div>
-                <div class="chip" data-value="Podcasts">Podcasts</div>
-              </div>
-            </div>
-            <div class="field-group">
-              <label class="field-label" for="personality_desc">Describe yourself in your own words</label>
-              <textarea id="personality_desc" name="personality_desc"
-                        placeholder="What would your friends say about you?"></textarea>
-            </div>
+
           </div>
           <div class="btn-row">
             <button type="button" class="btn-back" onclick="goToStep(2)">← Back</button>
@@ -1083,87 +1154,56 @@
       </div>
 
 
-      <!-- ═══════════════════════
-           STEP 4 — Gift Info
-      ═══════════════════════ -->
+      <!-- ═══════════════════
+           STEP 4 — Us 💛
+      ═══════════════════ -->
       <div class="step-section" id="step-4">
 
         <div class="card-top">
-          <img class="step-pin"
-               src="https://www.figma.com/api/mcp/asset/3dc8e274-98c6-4e33-910d-77080d1c34c1"
-               alt="">
-          <span class="badge badge-black">Gift info</span>
-          <h2 class="section-title">Gift Info</h2>
-        </div>
-
-        <div class="card-body">
-          <div class="fields-section">
-            <div class="field-row">
-              <div class="field-group">
-                <label class="field-label" for="clothing_size">Clothing size</label>
-                <input type="text" id="clothing_size" name="clothing_size"
-                       placeholder="e.g. S, M, L, 10, 12…">
-              </div>
-              <div class="field-group">
-                <label class="field-label" for="shoe_size">Shoe size</label>
-                <input type="text" id="shoe_size" name="shoe_size"
-                       placeholder="e.g. UK 7, EU 40…">
-              </div>
-            </div>
-            <div class="field-group">
-              <label class="field-label" for="brands">Favourite brands</label>
-              <textarea id="brands" name="brands"
-                        placeholder="Any brands or shops you love?"></textarea>
-            </div>
-            <div class="field-group">
-              <label class="field-label" for="wishlist">Wishlist</label>
-              <textarea id="wishlist" name="wishlist"
-                        placeholder="What's on your wishlist? Drop links if you have them!"></textarea>
-            </div>
-          </div>
-          <div class="btn-row">
-            <button type="button" class="btn-back" onclick="goToStep(3)">← Back</button>
-            <button type="button" class="btn"      onclick="goToStep(5)">Continue →</button>
-          </div>
-        </div>
-      </div>
-
-
-      <!-- ═══════════════════
-           STEP 5 — Us 💛
-      ═══════════════════ -->
-      <div class="step-section" id="step-5">
-
-        <div class="card-top">
-          <img class="step-pin"
-               src="https://www.figma.com/api/mcp/asset/9234fdae-2ef1-4dd7-8c61-1ba5671006e9"
-               alt="">
+          <span class="step-pin"><svg viewBox="0 0 23 44" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="11.5" cy="11" rx="8.5" ry="8.5" fill="#FBBF24" stroke="#fff" stroke-width="1.5"/><ellipse cx="11.5" cy="11" rx="4" ry="4" fill="#fff" opacity="0.45"/><rect x="10.5" y="18" width="2" height="22" rx="1" fill="#FBBF24" opacity="0.6"/><ellipse cx="11.5" cy="40.5" rx="2" ry="1.5" fill="#FBBF24" opacity="0.25"/></svg></span>
           <span class="badge badge-purple">Just us 💛</span>
           <h2 class="section-title">Us 💛</h2>
         </div>
 
         <div class="card-body">
           <div class="fields-section">
+
             <div class="field-group">
               <label class="field-label" for="fav_memory">A favourite memory of ours</label>
               <textarea id="fav_memory" name="fav_memory"
                         placeholder="Tell me about a moment you remember…"></textarea>
             </div>
+
             <div class="field-group">
               <label class="field-label" for="inside_joke">An inside joke we have</label>
               <textarea id="inside_joke" name="inside_joke"
                         placeholder="Go on, remind me…"></textarea>
             </div>
+
             <div class="field-group">
-              <label class="field-label" for="catchphrase">Your catchphrase / something you always say</label>
-              <input type="text" id="catchphrase" name="catchphrase"
-                     class="w-full" placeholder="What do you always say?">
+              <label class="field-label">When you're going through it, how can I best show up?</label>
+              <div class="chip-group" data-target="support-style-val">
+                <div class="chip" data-value="Just listen">Just listen</div>
+                <div class="chip" data-value="Give advice">Give me advice</div>
+                <div class="chip" data-value="Check in on me">Check in on me</div>
+                <div class="chip" data-value="Distract me">Distract me</div>
+                <div class="chip" data-value="Send food">Send food 😭</div>
+                <div class="chip" data-value="Give me space">Give me space first</div>
+              </div>
             </div>
+
+            <div class="field-group">
+              <label class="field-label" for="other_important">Anyone else I should know about in your world?</label>
+              <input type="text" id="other_important" name="other_important"
+                     placeholder="A therapist, a mentor, a dog, whoever matters right now…">
+            </div>
+
             <div class="field-group">
               <label class="field-label" for="extra_notes">Anything else you want me to know?</label>
               <textarea id="extra_notes" name="extra_notes"
                         placeholder="Extra thoughts, feelings, demands…"></textarea>
             </div>
+
           </div>
           <div class="btn-row">
             <button type="button" class="btn-back" onclick="goToStep(4)">← Back</button>
@@ -1252,7 +1292,7 @@
     document.getElementById('dot-'  + currentStep).classList.add('active');
 
     // FIX 3: update count text
-    document.getElementById('step-count').textContent = currentStep + ' / 5';
+    document.getElementById('step-count').textContent = currentStep + ' / 4';
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -1260,16 +1300,36 @@
 
   /* ═══════════════════════════════════════════════════
      2. CHIP SELECTION
+     - chip-group--single: only one chip selectable at a time
+     - regular chip-group: multi-select
   ═══════════════════════════════════════════════════ */
   document.querySelectorAll('.chip-group').forEach(function(group) {
+    var isSingle = group.classList.contains('chip-group--single');
+
     group.addEventListener('click', function(e) {
       var chip = e.target.closest('.chip');
       if (!chip) return;
-      chip.classList.toggle('selected');
+
+      if (isSingle) {
+        // Deselect all others first
+        group.querySelectorAll('.chip').forEach(function(c) { c.classList.remove('selected'); });
+        chip.classList.add('selected');
+      } else {
+        chip.classList.toggle('selected');
+      }
+
       var selected = Array.from(group.querySelectorAll('.chip.selected'))
                           .map(function(c) { return c.dataset.value; });
       var targetId = group.dataset.target;
       if (targetId) document.getElementById(targetId).value = selected.join(', ');
+
+      // Relationship status: show/hide partner fields
+      if (group.id === 'relationship-chips') {
+        var val = selected[0] || '';
+        var partnerFields = document.getElementById('partner-fields');
+        var showPartner = val && val !== 'Single';
+        partnerFields.style.display = showPartner ? 'block' : 'none';
+      }
     });
   });
 
@@ -1567,41 +1627,33 @@
     var html = '';
 
     html += reviewSection('About you', [
-      reviewRow('Name',         getVal('name')),
-      reviewRow('Birthday',     getVal('birthday-display')),
-      reviewRow('From',         getVal('from-val')),
-      reviewRow('Lives in',     getVal('lives-val')),
-      reviewRow('Occupation',   getVal('occupation')),
+      reviewRow('Name',          getVal('name')),
+      reviewRow('Birthday',      getVal('birthday-display')),
+      reviewRow('From',          getVal('from-val')),
+      reviewRow('Lives in',      getVal('lives-val')),
+      reviewRow('What they do',  getVal('job_title')),
+      reviewRow('Phone',         getVal('phone')),
+      reviewRow('Love language', getVal('love-languages-val')),
     ]);
 
-    html += reviewSection('The good stuff ✨', [
-      reviewRow('Fav colour',   getVal('fav_colour')),
-      reviewRow('Fav cuisine',  getVal('fav_cuisine')),
-      reviewRow('Fav film/TV',  getVal('fav_film')),
-      reviewRow('Fav book',     getVal('fav_book')),
-      reviewRow('Fav music',    getVal('fav_music')),
-      reviewRow('Fav place',    getVal('fav_place')),
+    html += reviewSection('Life right now 🌱', [
+      reviewRow('Relationship',     getVal('relationship-val')),
+      reviewRow("Partner's name",   getVal('partner_name')),
+      reviewRow('Anniversary',      getVal('anniversary')),
+      reviewRow('Current chapter',  getVal('current_chapter')),
+      reviewRow('Excited about',    getVal('excited_about')),
     ]);
 
-    html += reviewSection('Who you are 🌀', [
-      reviewRow('Love language',getVal('love-languages-val')),
-      reviewRow('Personality',  getVal('personality-types-val')),
-      reviewRow('Time of day',  getVal('time-of-day-val')),
-      reviewRow('Hobbies',      getVal('hobbies-val')),
-      reviewRow('In your words',getVal('personality_desc')),
-    ]);
-
-    html += reviewSection('Gift info 🎁', [
-      reviewRow('Clothing size',getVal('clothing_size')),
-      reviewRow('Shoe size',    getVal('shoe_size')),
-      reviewRow('Fav brands',   getVal('brands')),
-      reviewRow('Wishlist',     getVal('wishlist')),
+    html += reviewSection('Where you live 🏡', [
+      reviewRow('Address',      [getVal('address_line1'), getVal('city'), getVal('postcode')].filter(function(v){ return v && v !== '—'; }).join(', ')),
+      reviewRow('Delivery notes', getVal('send_notes')),
     ]);
 
     html += reviewSection('Just us 💛', [
       reviewRow('Favourite memory', getVal('fav_memory')),
       reviewRow('Inside joke',      getVal('inside_joke')),
-      reviewRow('Catchphrase',      getVal('catchphrase')),
+      reviewRow('How to show up',   getVal('support-style-val')),
+      reviewRow('Others in their world', getVal('other_important')),
       reviewRow('Anything else',    getVal('extra_notes')),
     ]);
 
