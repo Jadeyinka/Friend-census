@@ -16,30 +16,30 @@
       --card-pad-b: 32px;
       --card-gap: 32px;
 
-      /* ── Warm Neutral palette ── */
-      --bg:            #F5F1EC;
+      /* ── Soft & Dreamy palette ── */
+      --bg:            #EDEAF8;
       --card-bg:       #FFFFFF;
-      --card-border:   #E8DDD2;
-      --accent:        #A8673E;
-      --accent-hover:  #8F5432;
-      --accent-active: #7A4428;
-      --input-bg:      #FDFAF7;
-      --input-border:  1px solid #E8DDD2;
-      --input-focus:   #C07A4F;
+      --card-border:   #DAD6F0;
+      --accent:        #6B5CE7;
+      --accent-hover:  #5A4BD6;
+      --accent-active: #4A3BC6;
+      --input-bg:      #F7F5FF;
+      --input-border:  1px solid #DAD6F0;
+      --input-focus:   #6B5CE7;
       --input-h:       48px;
       --input-pad:     12px;
       --input-radius:  8px;
       --input-w:       320px;
-      --placeholder:   #8B7D6B;
-      --text-main:     #1F1A14;
-      --text-soft:     #7A6E63;
+      --placeholder:   #9B97C0;
+      --text-main:     #1A1535;
+      --text-soft:     #7B77A0;
       --chip-radius:   16px;
       --textarea-h:    80px;
-      --btn-bg:        #C07A4F;
+      --btn-bg:        #6B5CE7;
       --btn-w:         360px;
-      --step-active:   #C07A4F;
-      --step-inactive: #D6C9BB;
-      --shadow:        rgba(139,100,72,0.07);
+      --step-active:   #6B5CE7;
+      --step-inactive: #CEC9F0;
+      --shadow:        rgba(107,92,231,0.08);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -149,9 +149,9 @@
       font-size: 12px; font-weight: 400;
       width: fit-content; line-height: 1.4;
     }
-    .badge-green  { background: #E4F0DC; color: #3A5C28; }
-    .badge-purple { background: #F5E8DE; color: #7C3D1A; }
-    .badge-black  { background: #1F1A14; color: #fff; }
+    .badge-green  { background: #E2DEFA; color: #4A3BC6; }
+    .badge-purple { background: #EDE8FB; color: #5A4BD6; }
+    .badge-black  { background: #E2DEFA; color: #4A3BC6; }
 
     /* ── Section title ── */
     .section-title {
@@ -178,6 +178,7 @@
       color: var(--text-main); line-height: 1.4;
     }
     .field-label .required { color: #E53E3E; }
+    .field-error { font-size: 12px; color: #E53E3E; min-height: 16px; display: block; }
 
     /* ── Two-column row ── */
     .field-row { display: flex; gap: 16px; flex-wrap: wrap; }
@@ -212,8 +213,8 @@
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus {
-      -webkit-box-shadow: 0 0 0px 1000px var(--input-bg) inset;
-      box-shadow: 0 0 0px 1000px var(--input-bg) inset;
+      -webkit-box-shadow: 0 0 0px 1000px #F7F5FF inset;
+      box-shadow: 0 0 0px 1000px #F7F5FF inset;
       -webkit-text-fill-color: var(--text-main);
       transition: background-color 9999s ease-in-out 0s;
     }
@@ -455,14 +456,94 @@
       cursor: pointer; transition: background 0.1s;
       display: flex; align-items: center; gap: 10px;
     }
-    .country-option:hover { background: #F5EDE5; }
-    .country-option.selected { background: #F5E8DE; color: var(--accent); font-weight: 500; }
+    .country-option:hover { background: #EDEAFA; }
+    .country-option.selected { background: #E2DEFA; color: var(--accent); font-weight: 500; }
     .country-option.hidden { display: none; }
     .country-flag { font-size: 18px; line-height: 1; flex-shrink: 0; }
     .country-no-results {
       font-family: var(--font); font-size: 13px; color: var(--placeholder);
       padding: 12px var(--input-pad); text-align: center;
     }
+
+    /* ── Phone number with country code ── */
+    .phone-wrap {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      width: 100%;
+      border: var(--input-border);
+      border-radius: var(--input-radius);
+      background: var(--input-bg);
+      overflow: visible;
+      position: relative;
+    }
+    .phone-wrap:focus-within { border-color: var(--input-focus); }
+
+    .phone-code-wrap { position: relative; flex-shrink: 0; }
+
+    .phone-code-btn {
+      display: flex; align-items: center; gap: 5px;
+      height: var(--input-h);
+      padding: 0 10px 0 12px;
+      background: transparent; border: none;
+      border-right: var(--input-border);
+      border-radius: var(--input-radius) 0 0 var(--input-radius);
+      cursor: pointer; font-family: var(--font); font-size: 14px;
+      color: var(--text-main); white-space: nowrap;
+    }
+    .phone-code-btn:hover { background: rgba(107,92,231,0.05); }
+    .phone-code-btn svg { color: var(--text-soft); transition: transform 0.2s; }
+    .phone-code-btn.open svg { transform: rotate(180deg); }
+
+    #phone-flag { font-size: 18px; line-height: 1; }
+    #phone-dial { font-size: 13px; color: var(--text-soft); font-weight: 500; }
+
+    .phone-code-dropdown {
+      display: none;
+      position: absolute; top: calc(100% + 4px); left: 0;
+      width: 260px; max-height: 240px;
+      background: var(--card-bg);
+      border: var(--input-border);
+      border-radius: var(--input-radius);
+      box-shadow: 0 8px 24px rgba(107,92,231,0.12);
+      z-index: 200; overflow: hidden;
+      flex-direction: column;
+    }
+    .phone-code-dropdown.open { display: flex; }
+
+    .phone-code-search-wrap { padding: 8px; border-bottom: var(--input-border); flex-shrink: 0; }
+    .phone-code-search {
+      width: 100%; height: 34px; padding: 0 10px;
+      font-family: var(--font); font-size: 13px; color: var(--text-main);
+      background: var(--input-bg); border: var(--input-border);
+      border-radius: 6px; outline: none;
+    }
+    .phone-code-search:focus { border-color: var(--input-focus); }
+
+    .phone-code-list { overflow-y: auto; max-height: 180px; }
+    .phone-code-list::-webkit-scrollbar { width: 4px; }
+    .phone-code-list::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
+
+    .phone-code-option {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; cursor: pointer;
+      font-family: var(--font); font-size: 13px; color: var(--text-main);
+    }
+    .phone-code-option:hover { background: #EDEAFA; }
+    .phone-code-option.selected { background: #E2DEFA; color: var(--accent); font-weight: 500; }
+    .phone-code-option.hidden { display: none; }
+    .phone-code-option .pc-flag { font-size: 17px; flex-shrink: 0; }
+    .phone-code-option .pc-name { flex: 1; }
+    .phone-code-option .pc-dial { color: var(--text-soft); font-size: 12px; }
+
+    .phone-wrap input[type="tel"] {
+      flex: 1; border: none; background: transparent;
+      height: var(--input-h); padding: 0 12px;
+      font-family: var(--font); font-size: 14px; color: var(--text-main);
+      outline: none; border-radius: 0 var(--input-radius) var(--input-radius) 0;
+      width: 0; /* let flex handle width */
+    }
+    .phone-wrap input[type="tel"]::placeholder { color: var(--placeholder); }
 
 
     /* ════════════════════════════════════
@@ -495,8 +576,9 @@
 
     /* Hero image — large rectangle */
     .intro-hero {
-      width: 100%;
-      height: 300px;
+      width: calc(100% - 96px);
+      margin: 0 auto;
+      height: 324px;
       border-radius: 12px;
       border: 1px solid var(--card-border);
       box-shadow: 0px 4px 20px 1px var(--shadow);
@@ -1023,9 +1105,31 @@
                        placeholder="e.g. Product designer at Kora">
               </div>
               <div class="field-group">
-                <label class="field-label" for="phone">Phone number</label>
-                <input type="tel" id="phone" name="phone"
-                       placeholder="e.g. +44 7911 123456">
+                <label class="field-label" for="phone-number">Phone number</label>
+                <div class="phone-wrap" id="phone-wrap">
+                  <!-- Country code picker -->
+                  <div class="phone-code-wrap" id="phone-code-wrap">
+                    <button type="button" class="phone-code-btn" id="phone-code-btn"
+                            onclick="togglePhoneCodeDrop(event)">
+                      <span id="phone-flag">🌍</span>
+                      <span id="phone-dial">+--</span>
+                      <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <div class="phone-code-dropdown" id="phone-code-dropdown">
+                      <div class="phone-code-search-wrap">
+                        <input type="text" class="phone-code-search" id="phone-code-search"
+                               placeholder="Search country…" autocomplete="off"
+                               oninput="filterPhoneCodes(this.value)">
+                      </div>
+                      <div class="phone-code-list" id="phone-code-list"></div>
+                    </div>
+                  </div>
+                  <!-- Number input -->
+                  <input type="tel" id="phone-number" name="phone"
+                         placeholder="7911 123456"
+                         oninput="validatePhone(this)">
+                </div>
+                <span class="field-error" id="phone-error"></span>
               </div>
             </div>
 
@@ -1272,6 +1376,161 @@
      1. STEP NAVIGATION + STEP COUNT
   ═══════════════════════════════════════════════════ */
   var currentStep = 1;
+
+  function validatePhone(input) {
+    var allowed = /^[0-9\s\+\-\(\)]*$/;
+    var error = document.getElementById('phone-error');
+
+    // Strip letters first
+    if (!allowed.test(input.value)) {
+      input.value = input.value.replace(/[^0-9\s\+\-\(\)]/g, '');
+      error.textContent = 'Numbers only please — no letters allowed.';
+      return;
+    }
+
+    // Count total digits: dial code digits + number digits (max 15 per E.164)
+    var dialDigits   = (selectedPhoneDial || '').replace(/\D/g, '');
+    var numberDigits = input.value.replace(/\D/g, '');
+    var totalDigits  = dialDigits.length + numberDigits.length;
+
+    if (totalDigits > 15) {
+      // Trim the number input until we're within the limit
+      var maxAllowed = 15 - dialDigits.length;
+      // Walk back character by character to preserve formatting
+      while (input.value.replace(/\D/g, '').length > maxAllowed) {
+        input.value = input.value.slice(0, -1);
+      }
+      error.textContent = 'Phone numbers can\'t exceed 15 digits (including country code).';
+      return;
+    }
+
+    error.textContent = '';
+  }
+
+  /* ═══════════════════════════════════════════════════
+     PHONE COUNTRY CODE PICKER
+  ═══════════════════════════════════════════════════ */
+  var phoneCodes = [
+    { flag:'🇳🇬', name:'Nigeria',            dial:'+234' },
+    { flag:'🇬🇧', name:'United Kingdom',     dial:'+44'  },
+    { flag:'🇺🇸', name:'United States',      dial:'+1'   },
+    { flag:'🇨🇦', name:'Canada',             dial:'+1'   },
+    { flag:'🇬🇭', name:'Ghana',              dial:'+233' },
+    { flag:'🇰🇪', name:'Kenya',              dial:'+254' },
+    { flag:'🇿🇦', name:'South Africa',       dial:'+27'  },
+    { flag:'🇹🇿', name:'Tanzania',           dial:'+255' },
+    { flag:'🇺🇬', name:'Uganda',             dial:'+256' },
+    { flag:'🇪🇹', name:'Ethiopia',           dial:'+251' },
+    { flag:'🇨🇮', name:'Côte d\'Ivoire',     dial:'+225' },
+    { flag:'🇸🇳', name:'Senegal',            dial:'+221' },
+    { flag:'🇷🇼', name:'Rwanda',             dial:'+250' },
+    { flag:'🇿🇲', name:'Zambia',             dial:'+260' },
+    { flag:'🇿🇼', name:'Zimbabwe',           dial:'+263' },
+    { flag:'🇨🇲', name:'Cameroon',           dial:'+237' },
+    { flag:'🇫🇷', name:'France',             dial:'+33'  },
+    { flag:'🇩🇪', name:'Germany',            dial:'+49'  },
+    { flag:'🇮🇹', name:'Italy',              dial:'+39'  },
+    { flag:'🇪🇸', name:'Spain',              dial:'+34'  },
+    { flag:'🇵🇹', name:'Portugal',           dial:'+351' },
+    { flag:'🇳🇱', name:'Netherlands',        dial:'+31'  },
+    { flag:'🇧🇪', name:'Belgium',            dial:'+32'  },
+    { flag:'🇨🇭', name:'Switzerland',        dial:'+41'  },
+    { flag:'🇸🇪', name:'Sweden',             dial:'+46'  },
+    { flag:'🇳🇴', name:'Norway',             dial:'+47'  },
+    { flag:'🇩🇰', name:'Denmark',            dial:'+45'  },
+    { flag:'🇦🇺', name:'Australia',          dial:'+61'  },
+    { flag:'🇳🇿', name:'New Zealand',        dial:'+64'  },
+    { flag:'🇮🇳', name:'India',              dial:'+91'  },
+    { flag:'🇵🇰', name:'Pakistan',           dial:'+92'  },
+    { flag:'🇧🇩', name:'Bangladesh',         dial:'+880' },
+    { flag:'🇨🇳', name:'China',              dial:'+86'  },
+    { flag:'🇯🇵', name:'Japan',              dial:'+81'  },
+    { flag:'🇰🇷', name:'South Korea',        dial:'+82'  },
+    { flag:'🇸🇬', name:'Singapore',          dial:'+65'  },
+    { flag:'🇲🇾', name:'Malaysia',           dial:'+60'  },
+    { flag:'🇵🇭', name:'Philippines',        dial:'+63'  },
+    { flag:'🇮🇩', name:'Indonesia',          dial:'+62'  },
+    { flag:'🇦🇪', name:'UAE',                dial:'+971' },
+    { flag:'🇸🇦', name:'Saudi Arabia',       dial:'+966' },
+    { flag:'🇶🇦', name:'Qatar',              dial:'+974' },
+    { flag:'🇧🇷', name:'Brazil',             dial:'+55'  },
+    { flag:'🇲🇽', name:'Mexico',             dial:'+52'  },
+    { flag:'🇦🇷', name:'Argentina',          dial:'+54'  },
+    { flag:'🇨🇴', name:'Colombia',           dial:'+57'  },
+    { flag:'🇮🇪', name:'Ireland',            dial:'+353' },
+    { flag:'🇵🇱', name:'Poland',             dial:'+48'  },
+    { flag:'🇺🇦', name:'Ukraine',            dial:'+380' },
+    { flag:'🇷🇺', name:'Russia',             dial:'+7'   },
+    { flag:'🇹🇷', name:'Turkey',             dial:'+90'  },
+    { flag:'🇮🇱', name:'Israel',             dial:'+972' },
+    { flag:'🇿🇦', name:'Egypt',              dial:'+20'  },
+    { flag:'🇲🇦', name:'Morocco',            dial:'+212' },
+  ];
+
+  var selectedPhoneDial = '';
+
+  function buildPhoneCodeList() {
+    var list = document.getElementById('phone-code-list');
+    list.innerHTML = '';
+    phoneCodes.forEach(function(c, i) {
+      var div = document.createElement('div');
+      div.className = 'phone-code-option';
+      div.dataset.index = i;
+      div.dataset.name = c.name.toLowerCase();
+      div.innerHTML = '<span class="pc-flag">' + c.flag + '</span>' +
+                      '<span class="pc-name">' + c.name + '</span>' +
+                      '<span class="pc-dial">' + c.dial + '</span>';
+      div.onclick = function() { selectPhoneCode(c); };
+      list.appendChild(div);
+    });
+  }
+
+  function togglePhoneCodeDrop(e) {
+    e.stopPropagation();
+    var dropdown = document.getElementById('phone-code-dropdown');
+    var btn = document.getElementById('phone-code-btn');
+    var isOpen = dropdown.classList.contains('open');
+    if (isOpen) {
+      dropdown.classList.remove('open');
+      btn.classList.remove('open');
+    } else {
+      dropdown.classList.add('open');
+      btn.classList.add('open');
+      document.getElementById('phone-code-search').value = '';
+      filterPhoneCodes('');
+      setTimeout(function() { document.getElementById('phone-code-search').focus(); }, 50);
+    }
+  }
+
+  function filterPhoneCodes(query) {
+    var q = query.toLowerCase().trim();
+    document.querySelectorAll('.phone-code-option').forEach(function(opt) {
+      var match = opt.dataset.name.includes(q);
+      opt.classList.toggle('hidden', !match);
+    });
+  }
+
+  function selectPhoneCode(c) {
+    document.getElementById('phone-flag').textContent = c.flag;
+    document.getElementById('phone-dial').textContent = c.dial;
+    selectedPhoneDial = c.dial;
+    document.getElementById('phone-code-dropdown').classList.remove('open');
+    document.getElementById('phone-code-btn').classList.remove('open');
+    // Focus the number input after selection
+    document.getElementById('phone-number').focus();
+  }
+
+  // Close phone code dropdown on outside click
+  document.addEventListener('click', function(e) {
+    var wrap = document.getElementById('phone-code-wrap');
+    if (wrap && !wrap.contains(e.target)) {
+      document.getElementById('phone-code-dropdown').classList.remove('open');
+      document.getElementById('phone-code-btn').classList.remove('open');
+    }
+  });
+
+  // Build the list on page load
+  document.addEventListener('DOMContentLoaded', buildPhoneCodeList);
 
   function goToStep(n) {
     if (currentStep === 1 && n > 1) {
@@ -1643,7 +1902,7 @@
       reviewRow('From',          getVal('from-val')),
       reviewRow('Lives in',      getVal('lives-val')),
       reviewRow('What they do',  getVal('job_title')),
-      reviewRow('Phone',         getVal('phone')),
+      reviewRow('Phone',         (selectedPhoneDial && getVal('phone') ? selectedPhoneDial + ' ' + getVal('phone') : getVal('phone'))),
       reviewRow('Love language', getVal('love-languages-val')),
     ]);
 
