@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Friend Census — Palette Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Figtree', sans-serif;
+    background: #f5f5f5;
+    padding: 40px 24px 80px;
+    min-height: 100vh;
+  }
+  h1 {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 48px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .palette-option {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .palette-option:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+  }
+
+  .palette-label {
+    padding: 16px 20px 12px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+  }
+  .palette-label strong {
+    font-size: 15px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .palette-label span {
+    font-size: 12px;
+    color: #999;
+  }
+
+  /* ── CARD MOCK ── */
+  .mock {
+    padding: 28px 24px 24px;
+  }
+
+  .mock-page-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .mock-page-sub {
+    font-size: 12px;
+    margin-bottom: 20px;
+  }
+
+  .mock-dots {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+    align-items: center;
+  }
+  .mock-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    opacity: 0.25;
+  }
+  .mock-dot.active { opacity: 1; width: 20px; border-radius: 4px; }
+
+  .mock-card {
+    border-radius: 12px;
+    overflow: hidden;
+    border-width: 1px;
+    border-style: solid;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+  }
+
+  .mock-card-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 20px 12px;
+  }
+
+  .mock-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+  }
+
+  .mock-card-title {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .mock-divider {
+    height: 1px;
+    margin: 0 20px;
+  }
+
+  .mock-body {
+    padding: 16px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mock-label { font-size: 10px; font-weight: 500; margin-bottom: 4px; }
+  .mock-input {
+    height: 36px;
+    border-radius: 8px;
+    border-width: 1px;
+    border-style: solid;
+    width: 100%;
+  }
+  .mock-textarea {
+    height: 56px;
+    border-radius: 8px;
+    border-width: 1px;
+    border-style: solid;
+    width: 100%;
+  }
+
+  .mock-chips {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+  .mock-chip {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border-width: 1px;
+    border-style: solid;
+  }
+  .mock-chip.active {
+    border-color: transparent;
+  }
+
+  .mock-btn {
+    margin-top: 4px;
+    height: 40px;
+    border-radius: 10px;
+    border: none;
+    font-family: 'Figtree', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: default;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+  }
+
+  /* ════════════════
+     PALETTE 1 — Warm & Golden
+  ════════════════ */
+  .p1 { background: #FFFBF2; }
+  .p1 .mock-page-title { color: #2D1A00; }
+  .p1 .mock-page-sub   { color: #B07A30; }
+  .p1 .mock-dot        { background: #E8A838; }
+  .p1 .mock-card       { background: #FFFFFF; border-color: #F5DFA0; }
+  .p1 .mock-badge      { background: #FEF3C7; color: #92400E; }
+  .p1 .mock-card-title { color: #2D1A00; }
+  .p1 .mock-divider    { background: #FEF3C7; }
+  .p1 .mock-label      { color: #B07A30; }
+  .p1 .mock-input      { background: #FFFDF7; border-color: #F5DFA0; }
+  .p1 .mock-textarea   { background: #FFFDF7; border-color: #F5DFA0; }
+  .p1 .mock-chip       { background: #FFFDF7; border-color: #F5DFA0; color: #92400E; }
+  .p1 .mock-chip.active{ background: #F59E0B; color: #fff; }
+  .p1 .mock-btn        { background: #F59E0B; }
+
+  /* ════════════════
+     PALETTE 2 — Soft & Dreamy (current refined)
+  ════════════════ */
+  .p2 { background: #F7F6FF; }
+  .p2 .mock-page-title { color: #1c1f2b; }
+  .p2 .mock-page-sub   { color: #8B8FBF; }
+  .p2 .mock-dot        { background: #7C6FF7; }
+  .p2 .mock-card       { background: #FFFFFF; border-color: #DDD9FF; }
+  .p2 .mock-badge      { background: #EDE9FF; color: #5B49D4; }
+  .p2 .mock-card-title { color: #1c1f2b; }
+  .p2 .mock-divider    { background: #F0EEFF; }
+  .p2 .mock-label      { color: #8B8FBF; }
+  .p2 .mock-input      { background: #FAFAFE; border-color: #DDD9FF; }
+  .p2 .mock-textarea   { background: #FAFAFE; border-color: #DDD9FF; }
+  .p2 .mock-chip       { background: #FAFAFE; border-color: #DDD9FF; color: #5B49D4; }
+  .p2 .mock-chip.active{ background: #7C6FF7; color: #fff; }
+  .p2 .mock-btn        { background: #7C6FF7; }
+
+  /* ════════════════
+     PALETTE 3 — Warm Neutral (editorial but approachable)
+  ════════════════ */
+  .p3 { background: #F5F1EC; }
+  .p3 .mock-page-title { color: #1F1A14; }
+  .p3 .mock-page-sub   { color: #8B7D6B; }
+  .p3 .mock-dot        { background: #C07A4F; }
+  .p3 .mock-card       { background: #FFFFFF; border-color: #E8DDD2; }
+  .p3 .mock-badge      { background: #FDF0E8; color: #7C3D1A; }
+  .p3 .mock-card-title { color: #1F1A14; }
+  .p3 .mock-divider    { background: #F5EDE5; }
+  .p3 .mock-label      { color: #8B7D6B; }
+  .p3 .mock-input      { background: #FDFAF7; border-color: #E8DDD2; }
+  .p3 .mock-textarea   { background: #FDFAF7; border-color: #E8DDD2; }
+  .p3 .mock-chip       { background: #FDFAF7; border-color: #E8DDD2; color: #7C3D1A; }
+  .p3 .mock-chip.active{ background: #C07A4F; color: #fff; }
+  .p3 .mock-btn        { background: #C07A4F; }
+
+  /* ════════════════
+     PALETTE 4 — Rose & Warm Blush
+  ════════════════ */
+  .p4 { background: #FFF8F8; }
+  .p4 .mock-page-title { color: #2D1520; }
+  .p4 .mock-page-sub   { color: #C0788A; }
+  .p4 .mock-dot        { background: #E8748C; }
+  .p4 .mock-card       { background: #FFFFFF; border-color: #F5D0D9; }
+  .p4 .mock-badge      { background: #FDE8ED; color: #9B2335; }
+  .p4 .mock-card-title { color: #2D1520; }
+  .p4 .mock-divider    { background: #FDE8ED; }
+  .p4 .mock-label      { color: #C0788A; }
+  .p4 .mock-input      { background: #FFFBFC; border-color: #F5D0D9; }
+  .p4 .mock-textarea   { background: #FFFBFC; border-color: #F5D0D9; }
+  .p4 .mock-chip       { background: #FFFBFC; border-color: #F5D0D9; color: #9B2335; }
+  .p4 .mock-chip.active{ background: #E8748C; color: #fff; }
+  .p4 .mock-btn        { background: #E8748C; }
+
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Friend Census — Colour Directions</h1>
+<p class="subtitle">Four directions for the same form. Warm &amp; personal feel across all of them.</p>
+
+<div class="grid">
+
+  <!-- ── 1. Warm & Golden ── -->
+  <div class="palette-option">
+    <div class="palette-label">
+      <strong>① Warm &amp; Golden</strong>
+      <span>Amber, honey, warm cream — matches the 💛 energy in the copy</span>
+    </div>
+    <div class="mock p1">
+      <div class="mock-page-title">Friend Census 💛</div>
+      <div class="mock-page-sub">Help me know you better.</div>
+      <div class="mock-dots">
+        <div class="mock-dot active"></div>
+        <div class="mock-dot"></div>
+        <div class="mock-dot"></div>
+        <div class="mock-dot"></div>
+        <div class="mock-dot"></div>
+      </div>
+      <div class="mock-card">
+        <div class="mock-card-top">
+          <span class="mock-badge">The basics</span>
+          <span class="mock-card-title">About you</span>
+        </div>
+        <div class="mock-divider"></div>
+        <div class="mock-body">
+          <div>
+            <div class="mock-label">Name *</div>
+            <div class="mock-input"></div>
+          </div>
+          <div>
+            <div class="mock-label">Love language(s)</div>
+            <div class="mock-chips">
+              <div class="mock-chip active">Quality Time</div>
+              <div class="mock-chip">Words of Affirmation</div>
+              <div class="mock-chip">Acts of Service</div>
+            </div>
+          </div>
+          <div class="mock-btn">Continue →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 2. Soft & Dreamy ── -->
+  <div class="palette-option">
+    <div class="palette-label">
+      <strong>② Soft &amp; Dreamy</strong>
+      <span>Lavender, lilac, muted purples — current direction, more intentional</span>
+    </div>
+    <div class="mock p2">
+      <div class="mock-page-title">Friend Census 💛</div>
+      <div class="mock-page-sub">Help me know you better.</div>
+      <div class="mock-dots">
+        <div class="mock-dot active"></div>
+        <div class="mock-dot"></div>
+        <div class="mock-dot"></div>
+        <div class="mock-dot"></div>
+        <div class="mock-dot"></div>
+      </div>
+      <div class="mock-card">
+        <div class="mock-card-top">
+          <span class="mock-badge">The basics</span>
+          <span class="mock-card-title">About you</span>
+        </div>
+        <div class="mock-divider"></div>
+        <div class="mock-body">
+          <div>
+            <div class="mock-label">Name *</div>
+            <div class="mock-input"></div>
+          </div>
+          <div>
+            <div class="mock-label">Love language(s)</div>
+            <div class="mock-chips">
+              <div class="mock-chip active">Quality Time</div>
+              <div class="mock-chip">Words of Affirmation</div>
+              <div class="mock-chip">Acts of Service</div>
+            </div>
+          </div>
+          <div class="mock-btn">Continue →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 3. Warm Neutral ── -->
+  <div class="palette-option">
+    <div class="palette-label">
+      <strong>③ Warm Neutral</strong>
+      <span>Terracotta, sand, warm off-whites — editorial but still personal</span>
+    </div>
+    <div class="mock p3">
+      <div class="mock-page-title">Friend Census 💛</div>
+      <div class="mock-page-sub">Help me know you better.</div>
+      <div class="mock-dots">
+        <div class="mock-dot active"></div>
+        <div class="mock-dot"></div>
+        <div class="mock-dot"></div>
+        <div class="mock-dot"></div>
+        <div class="mock-dot"></div>
+      </div>
+      <div class="mock-card">
+        <div class="mock-card-top">
+          <span class="mock-badge">The basics</span>
+          <span class="mock-card-title">About you</span>
+        </div>
+        <div class="mock-divider"></div>
+        <div class="mock-body">
+          <div>
+            <div class="mock-label">Name *</div>
+            <div class="mock-input"></div>
+          </div>
+          <div>
+            <div class="mock-label">Love language(s)</div>
+            <div class="mock-chips">
+              <div class="mock-chip active">Quality Time</div>
+              <div class="mock-chip">Words of Affirmation</div>
+              <div class="mock-chip">Acts of Service</div>
+            </div>
+          </div>
+          <div class="mock-btn">Continue →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 4. Rose & Blush ── -->
+  <div class="palette-option">
+    <div class="palette-label">
+      <strong>④ Rose &amp; Blush</strong>
+      <span>Warm pinks, dusty rose — soft and personal, feels like care</span>
+    </div>
+    <div class="mock p4">
+      <div class="mock-page-title">Friend Census 💛</div>
+      <div class="mock-page-sub">Help me know you better.</div>
+      <div class="mock-dots">
+        <div class="mock-dot active"></div>
+        <div class="mock-dot"></div>
+        <div class="mock-dot"></div>
+        <div class="mock-dot"></div>
+        <div class="mock-dot"></div>
+      </div>
+      <div class="mock-card">
+        <div class="mock-card-top">
+          <span class="mock-badge">The basics</span>
+          <span class="mock-card-title">About you</span>
+        </div>
+        <div class="mock-divider"></div>
+        <div class="mock-body">
+          <div>
+            <div class="mock-label">Name *</div>
+            <div class="mock-input"></div>
+          </div>
+          <div>
+            <div class="mock-label">Love language(s)</div>
+            <div class="mock-chips">
+              <div class="mock-chip active">Quality Time</div>
+              <div class="mock-chip">Words of Affirmation</div>
+              <div class="mock-chip">Acts of Service</div>
+            </div>
+          </div>
+          <div class="mock-btn">Continue →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
